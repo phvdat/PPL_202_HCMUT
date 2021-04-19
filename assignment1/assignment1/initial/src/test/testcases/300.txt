@@ -1,0 +1,4 @@
+
+            Function foo(){
+            Let x=[5]+[5,6];
+            }

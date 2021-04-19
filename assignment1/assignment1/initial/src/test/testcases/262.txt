@@ -1,0 +1,9 @@
+
+                Function foo(){
+                    Let abc;
+                    While(js["name"]){
+                        abc=abc+1;
+                    }
+                    Return True;
+                }
+                

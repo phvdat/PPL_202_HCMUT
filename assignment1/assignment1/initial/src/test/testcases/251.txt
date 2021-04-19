@@ -1,0 +1,5 @@
+
+                Function foo(){
+                    Return "tra ve 1 chuoi";
+                }
+                

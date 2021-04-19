@@ -1,0 +1,6 @@
+Function foo(a, b) {
+                        x = True;
+                        y = False;
+                        z = a > b <= c != d == e;
+                    }
+        

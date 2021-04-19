@@ -1,0 +1,10 @@
+
+                Let x;
+                Function foo(){
+                    Function foo(){
+                        Return a;
+                    }
+                    Call(foo2, [b,c]);
+                }
+                
+                

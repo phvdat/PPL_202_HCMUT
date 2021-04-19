@@ -1,0 +1,9 @@
+
+                Function foo(){
+                    Let abc;
+                    For i In $arr{
+                        abc= abc +1;
+                    }
+                    Return abc;
+                }
+                

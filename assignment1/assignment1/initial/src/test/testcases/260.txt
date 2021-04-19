@@ -1,0 +1,9 @@
+
+                Function foo(){
+                    Let abc;
+                    While(Call(foo,[2,3+x])){
+                        abc=abc+.1;
+                    }
+                    Return True;
+                }
+                

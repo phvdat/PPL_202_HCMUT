@@ -1,0 +1,10 @@
+
+                Function foo(a[5], b) {
+                    If(a==b){
+                        Return True;
+                    }
+                    Elif(a>20){
+                        a = 20;
+                    }
+                }
+                

@@ -1,0 +1,13 @@
+
+                Function foo(a[5], b) {
+                    Let i = 0;
+                    While (i < 5) {
+                        a[i] = b + 1;
+                        Let u: Number = i + 1;
+                        If (a[u] == 10) {
+                            Return a[i];
+                        }
+                    }
+                    Return -1;
+                }
+                

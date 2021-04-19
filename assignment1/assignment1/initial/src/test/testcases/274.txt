@@ -1,0 +1,9 @@
+
+                Function foo(){
+                    Let abc;
+                    For i Of Call(foo,[2]){
+                        abc= abc +1;
+                    }
+                    Return abc;
+                }
+                

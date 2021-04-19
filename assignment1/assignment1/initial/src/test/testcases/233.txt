@@ -1,0 +1,5 @@
+Function foo(a, b) {
+                        x = 4>0;
+                        y= !a + b % c * -d;
+                        }
+        

@@ -1,0 +1,10 @@
+
+                Let x;
+                Function foo(){
+                    Let abc;
+                    While(True){
+                        abc=abc+1;
+                    }
+                    Return True;
+                }
+                

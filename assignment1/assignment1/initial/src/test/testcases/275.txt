@@ -1,0 +1,9 @@
+
+                Function foo(){
+                    Let abc;
+                    For i Of js{
+                        abc= abc +1;
+                    }
+                    Return abc;
+                }
+                

@@ -1,0 +1,7 @@
+
+                Let x;
+                Function foo(){
+                    Let b =a;
+                    Return b;
+                }
+                

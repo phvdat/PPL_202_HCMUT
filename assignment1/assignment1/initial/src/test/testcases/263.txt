@@ -1,0 +1,6 @@
+
+                Function foo(){
+                    Let a = js["name"];
+                    Return a;
+                }
+                

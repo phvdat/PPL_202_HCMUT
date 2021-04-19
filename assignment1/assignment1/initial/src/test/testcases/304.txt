@@ -1,0 +1,7 @@
+
+                        Function foo(a[5], b) {
+                            Call(foo, [2 + x, 4 / y]);
+                            Call(goo, []);
+                        }
+
+            

@@ -1,0 +1,9 @@
+
+                Function foo(){
+                    Let abc;
+                    For i In {a:1,b:2,c:3}{
+                        abc= abc + 1;
+                    }
+                    Return abc;
+                }
+                

@@ -1,0 +1,14 @@
+
+                Let x;
+                Function foo(){
+                    Let abc;
+                    While(a){
+                        For i In arr{
+                            For k Of js{
+                                
+                            }
+                        }
+                    }
+                    Return True;
+                }
+                

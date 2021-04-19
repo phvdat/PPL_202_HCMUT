@@ -1,0 +1,10 @@
+
+                Function foo(a, b) {
+                    If(a==b){
+                        Return true;
+                    }
+                    Else{
+                        Return false;
+                    }
+                }
+                

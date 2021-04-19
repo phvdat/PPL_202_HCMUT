@@ -1,0 +1,7 @@
+
+                Let x;
+                Function foo(){
+                    Let arr[4] = [5];
+                    Return arr;
+                }
+                

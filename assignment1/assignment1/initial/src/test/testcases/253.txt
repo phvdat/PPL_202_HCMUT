@@ -1,0 +1,7 @@
+
+                Let x;
+                Function foo(){
+                    Constant $cons = True;
+                    Return True;
+                }
+                

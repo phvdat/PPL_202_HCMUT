@@ -1,0 +1,8 @@
+
+                Let a = {
+                    name: "Yanxi Place",
+                    address: "Chinese Forbidden City",
+                    surface: 10.2,
+                    people: ["Empress Xiaoxianchun", "Yongzheng Emperor"]
+                    };
+                

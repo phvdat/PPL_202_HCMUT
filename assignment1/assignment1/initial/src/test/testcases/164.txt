@@ -1,0 +1,1 @@
+bibang=int a=8;

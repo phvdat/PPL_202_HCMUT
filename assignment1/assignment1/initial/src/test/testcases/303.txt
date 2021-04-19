@@ -1,0 +1,25 @@
+ Constant $a = 10;
+                    Function foo(a[5], b) {
+                        Constant $b: String = "Story of Yanxi Place";
+                        Let i = 0;
+                        While (i < 5) {
+                            a[i] = (b + 1) * $a;
+                            Let u: Number = i + 1;
+                            If (a[u] == 10) {
+                            Return $b;
+                            }   
+                            i = i + 1;
+                        }
+                        Return $b + ": Done";
+                    }
+                    Let a = {
+                        name: "Yanxi Place",
+                        address: "Chinese Forbidden City"
+                    };
+                    Function foo(a[5], b) {
+                        For key Of a {
+                            Call(printLn, ["Value of " + key + ": " + a[key]]);
+                        }
+                    } 
+
+            

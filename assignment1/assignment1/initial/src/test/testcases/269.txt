@@ -1,0 +1,9 @@
+
+                Function foo(){
+                    Let abc;
+                    While(a+b==c){
+                        abc=abc+1;
+                    }
+                    Return True;
+                }
+                
