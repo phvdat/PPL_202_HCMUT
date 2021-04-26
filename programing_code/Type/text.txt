@@ -1,0 +1,20 @@
+
+
+
+
+
+
+
+
+    Program([VarDecl("x"),VarDecl("y"),VarDecl("z")],[Assign(Id("x"),UnOp("!",BinOp("=",Id("z"),BinOp("*",Id("y"),Id("x")))))])
+    Type Mismatch In Statement: Assign(Id("x"),UnOp("!",BinOp("=",Id("z"),BinOp("*",Id("y"),Id("x")))))
+    
+    
+    var x
+    var y
+    var z
+    x = !(z = y*x)
+
+    x:int
+    y:int
+    z:int

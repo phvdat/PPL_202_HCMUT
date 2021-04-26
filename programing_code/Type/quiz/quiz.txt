@@ -10,7 +10,7 @@ expo |  0   |  1   | 1
 sign 0
 fraction 5 ô : 00010
 
-Số nguyên có dấu: am 0, duong 1
+Số nguyên có dấu:
 Bù 1: đảo bit
 Bù 2: công1 của đảo bit
 
