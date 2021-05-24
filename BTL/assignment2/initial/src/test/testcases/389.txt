@@ -1,0 +1,5 @@
+Function main(){
+            If (a[u] == 10) {
+                Return b;
+            }
+        }

@@ -1,0 +1,1 @@
+Constant $x:JSON =  {name:{name:"Hoa"}};

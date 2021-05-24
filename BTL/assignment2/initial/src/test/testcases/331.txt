@@ -1,0 +1,1 @@
+Constant $x :Number =1 ,$y:String=1,$z:JSON =1,$k:Boolean=1; 

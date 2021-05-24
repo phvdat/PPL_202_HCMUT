@@ -1,0 +1,1 @@
+Program([FuncDecl(Id(main)[],[ForIn(Id(x),Id(ab),[Assign(ArrayAccess(Id(c),[Id(x)]),BinaryOp(*,Id(x),Id(x)))])])])

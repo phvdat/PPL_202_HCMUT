@@ -1,0 +1,7 @@
+
+            Function main(){
+               While(a==b){
+                   c[x]=x*x;
+               }
+            
+         }

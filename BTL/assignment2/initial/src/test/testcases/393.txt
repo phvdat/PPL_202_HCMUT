@@ -1,0 +1,3 @@
+Function main(){
+            a{"name"}[1]{"first"}[2] = 1;
+        }

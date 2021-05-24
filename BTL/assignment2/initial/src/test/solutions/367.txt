@@ -1,0 +1,1 @@
+Program([FuncDecl(Id(main)[],[While(BinaryOp(==,Id(a),Id(b)),[Assign(ArrayAccess(Id(c),[Id(x)]),BinaryOp(*,Id(x),Id(x)))])])])

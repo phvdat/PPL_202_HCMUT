@@ -1,0 +1,7 @@
+
+            Function main(){
+                If(a==1){ a=4;}
+                Elif(a==2){a=5;}
+                Elif(a==3){a=8;}
+            
+         }

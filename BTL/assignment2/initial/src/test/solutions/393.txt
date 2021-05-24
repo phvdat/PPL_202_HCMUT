@@ -1,0 +1,1 @@
+Program([FuncDecl(Id(main)[],[Assign(ArrayAccess(JSONAccess(ArrayAccess(JSONAccess(Id(a),[StringLiteral(name)]),[NumberLiteral(1.0)]),[StringLiteral(first)]),[NumberLiteral(2.0)]),NumberLiteral(1.0))])])

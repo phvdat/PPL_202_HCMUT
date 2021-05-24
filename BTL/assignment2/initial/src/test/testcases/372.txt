@@ -1,0 +1,5 @@
+Function main(){
+            While(i<5){
+                Return;
+            }
+        }

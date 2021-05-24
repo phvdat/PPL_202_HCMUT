@@ -1,0 +1,1 @@
+Program([ConstDecl(Id($x),NumberType,NumberLiteral(1.0))])

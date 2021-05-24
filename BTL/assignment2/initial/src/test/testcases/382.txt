@@ -1,0 +1,16 @@
+Function main(){
+            If (a[u] == 10) {
+                Return b;
+            }Elif(b){
+                Return c;
+                Return d;
+                Return e;
+            }Elif(c){
+                Return c1;
+                Return c2;
+                Return c3;
+            }Else{
+                Return y;
+                Return z;
+            }
+        }

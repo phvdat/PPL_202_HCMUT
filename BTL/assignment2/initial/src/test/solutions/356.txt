@@ -1,0 +1,1 @@
+Program([FuncDecl(Id(main)[],[If(BinaryOp(==,Id(a),NumberLiteral(1.0)),[Assign(Id(a),NumberLiteral(4.0))])ElseIf(BinaryOp(==,Id(a),NumberLiteral(2.0)),[Assign(Id(a),NumberLiteral(5.0))])])])

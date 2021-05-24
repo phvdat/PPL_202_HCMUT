@@ -1,0 +1,8 @@
+Function main(){
+            For i Of {name:"Hoang",age:"213"} {
+                Call(printLn, [i]);
+                Call(printLn, [i]);
+                Call(printLn, [i]);
+                Call(printLn, [i]);
+            }
+        }

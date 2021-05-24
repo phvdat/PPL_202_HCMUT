@@ -1,0 +1,1 @@
+Program([FuncDecl(Id(main)[],[ForOf(Id(x),JSONLiteral((Key=Id(name),Value=StringLiteral(hao)),(Key=Id(age),Value=NumberLiteral(21.0)),[])])])

@@ -1,0 +1,4 @@
+Function main(){
+            a[2] = Call(foo, [2]) + Call(foo, [Call(bar, [2, 3])]);
+
+        }

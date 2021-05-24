@@ -1,0 +1,1 @@
+Program([FuncDecl(Id(main)[],[ForIn(Id(x),ArrayLiteral(),[])])])

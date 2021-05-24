@@ -1,0 +1,3 @@
+Function main(){
+            a[Call(foo, [2])] = a[b{"name"}{"first"}] ;
+        }

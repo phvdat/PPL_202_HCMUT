@@ -1,0 +1,1 @@
+Program([ConstDecl(Id($x),JSONType,JSONLiteral((Key=Id(name),Value=StringLiteral(Hoa))),ConstDecl(Id($y),NumberType,NumberLiteral(1.0)),ConstDecl(Id($z),NumberType,NumberLiteral(2.0))])

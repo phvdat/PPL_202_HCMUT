@@ -1,0 +1,7 @@
+Function main(){
+            For i In [1, 2, 3] {
+                Call(printLn, [i]);
+                Call(printLn, [i]);
+                Call(printLn, [i]);
+            }
+        }

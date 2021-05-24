@@ -1,0 +1,1 @@
+Program([ConstDecl(Id($x),NoneType,NumberLiteral(1.0)),ConstDecl(Id($y),NoneType,NumberLiteral(1.0))])
