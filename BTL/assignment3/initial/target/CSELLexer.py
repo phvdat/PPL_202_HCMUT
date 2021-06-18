@@ -1,4 +1,4 @@
-# Generated from c:\Users\S540\Documents (2)\BK course\Ki_202\nguyen ly ngon ngu lap trinh\PPL_202_HCMUT\BTL\assignment1\assignment1\initial\src\main\csel\parser\CSEL.g4 by ANTLR 4.8
+# Generated from main/csel/parser/CSEL.g4 by ANTLR 4.8
 from antlr4 import *
 from io import StringIO
 from typing.io import TextIO
@@ -12,7 +12,7 @@ from lexererr import *
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2>")
-        buf.write("\u01bf\b\1\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7")
+        buf.write("\u01d0\b\1\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7")
         buf.write("\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r")
         buf.write("\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23")
         buf.write("\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30")
@@ -47,15 +47,17 @@ def serializedATN():
         buf.write("\f=\16=\u0189\13=\3>\3>\7>\u018d\n>\f>\16>\u0190\13>\3")
         buf.write("?\6?\u0193\n?\r?\16?\u0194\3?\3?\3@\3@\3@\3@\7@\u019d")
         buf.write("\n@\f@\16@\u01a0\13@\3@\3@\3@\3@\3@\3A\3A\3A\3B\3B\7B")
-        buf.write("\u01ac\nB\fB\16B\u01af\13B\3B\3B\3C\3C\3C\3C\3C\3D\3D")
-        buf.write("\3D\3D\3D\3D\5D\u01be\nD\3\u019e\2E\3\3\5\2\7\2\t\2\13")
-        buf.write("\4\r\5\17\2\21\2\23\2\25\2\27\6\31\7\33\b\35\t\37\n!\13")
-        buf.write("#\f%\r\'\16)\17+\20-\21/\22\61\23\63\24\65\25\67\269\27")
-        buf.write(";\30=\31?\32A\33C\34E\35G\36I\37K M!O\"Q#S$U%W&Y\'[(]")
-        buf.write(")_*a+c,e-g.i/k\60m\61o\62q\63s\64u\65w\66y\67{8}9\177")
-        buf.write(":\u0081;\u0083<\u0085=\u0087>\3\2\13\3\2\62;\4\2GGgg\7")
-        buf.write("\2\n\f\16\17$$))^^\t\2))^^ddhhppttvv\3\2c|\6\2\62;C\\")
-        buf.write("aac|\5\2\13\f\16\17\"\"\t\2$$^^ddhhppttvv\3\2%%\2\u01c9")
+        buf.write("\u01ac\nB\fB\16B\u01af\13B\3B\5B\u01b2\nB\3B\3B\3C\3C")
+        buf.write("\7C\u01b8\nC\fC\16C\u01bb\13C\3C\3C\3C\3C\3D\3D\3D\3D")
+        buf.write("\5D\u01c5\nD\3D\6D\u01c8\nD\rD\16D\u01c9\7D\u01cc\nD\f")
+        buf.write("D\16D\u01cf\13D\3\u019e\2E\3\3\5\2\7\2\t\2\13\4\r\5\17")
+        buf.write("\2\21\2\23\2\25\2\27\6\31\7\33\b\35\t\37\n!\13#\f%\r\'")
+        buf.write("\16)\17+\20-\21/\22\61\23\63\24\65\25\67\269\27;\30=\31")
+        buf.write("?\32A\33C\34E\35G\36I\37K M!O\"Q#S$U%W&Y\'[(])_*a+c,e")
+        buf.write("-g.i/k\60m\61o\62q\63s\64u\65w\66y\67{8}9\177:\u0081;")
+        buf.write("\u0083<\u0085=\u0087>\3\2\f\3\2\62;\4\2GGgg\7\2\f\f\16")
+        buf.write("\17$$))^^\t\2))^^ddhhppttvv\3\2c|\6\2\62;C\\aac|\5\2\13")
+        buf.write("\f\16\17\"\"\4\3\f\f\16\17\t\2$$^^ddhhppttvv\3\2%%\2\u01dd")
         buf.write("\2\3\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\27\3\2\2\2\2\31")
         buf.write("\3\2\2\2\2\33\3\2\2\2\2\35\3\2\2\2\2\37\3\2\2\2\2!\3\2")
         buf.write("\2\2\2#\3\2\2\2\2%\3\2\2\2\2\'\3\2\2\2\2)\3\2\2\2\2+\3")
@@ -88,7 +90,7 @@ def serializedATN():
         buf.write("\3\2\2\2s\u017d\3\2\2\2u\u017f\3\2\2\2w\u0181\3\2\2\2")
         buf.write("y\u0183\3\2\2\2{\u018a\3\2\2\2}\u0192\3\2\2\2\177\u0198")
         buf.write("\3\2\2\2\u0081\u01a6\3\2\2\2\u0083\u01a9\3\2\2\2\u0085")
-        buf.write("\u01b2\3\2\2\2\u0087\u01bd\3\2\2\2\u0089\u008b\5\7\4\2")
+        buf.write("\u01b5\3\2\2\2\u0087\u01c0\3\2\2\2\u0089\u008b\5\7\4\2")
         buf.write("\u008a\u0089\3\2\2\2\u008b\u008c\3\2\2\2\u008c\u008a\3")
         buf.write("\2\2\2\u008c\u008d\3\2\2\2\u008d\u0097\3\2\2\2\u008e\u0090")
         buf.write("\5\5\3\2\u008f\u008e\3\2\2\2\u008f\u0090\3\2\2\2\u0090")
@@ -194,16 +196,24 @@ def serializedATN():
         buf.write("\3\2\2\2\u01a6\u01a7\13\2\2\2\u01a7\u01a8\bA\4\2\u01a8")
         buf.write("\u0082\3\2\2\2\u01a9\u01ad\7$\2\2\u01aa\u01ac\5\17\b\2")
         buf.write("\u01ab\u01aa\3\2\2\2\u01ac\u01af\3\2\2\2\u01ad\u01ab\3")
-        buf.write("\2\2\2\u01ad\u01ae\3\2\2\2\u01ae\u01b0\3\2\2\2\u01af\u01ad")
-        buf.write("\3\2\2\2\u01b0\u01b1\bB\5\2\u01b1\u0084\3\2\2\2\u01b2")
-        buf.write("\u01b3\5\u0083B\2\u01b3\u01b4\7^\2\2\u01b4\u01b5\n\t\2")
-        buf.write("\2\u01b5\u01b6\bC\6\2\u01b6\u0086\3\2\2\2\u01b7\u01b8")
-        buf.write("\7%\2\2\u01b8\u01b9\7%\2\2\u01b9\u01ba\3\2\2\2\u01ba\u01be")
-        buf.write("\13\2\2\2\u01bb\u01bc\n\n\2\2\u01bc\u01be\bD\7\2\u01bd")
-        buf.write("\u01b7\3\2\2\2\u01bd\u01bb\3\2\2\2\u01be\u0088\3\2\2\2")
-        buf.write("\24\2\u008c\u008f\u0092\u0097\u009d\u00a5\u00aa\u00ae")
-        buf.write("\u00b4\u00bc\u00c0\u0187\u018e\u0194\u019e\u01ad\u01bd")
-        buf.write("\b\3\7\2\b\2\2\3A\3\3B\4\3C\5\3D\6")
+        buf.write("\2\2\2\u01ad\u01ae\3\2\2\2\u01ae\u01b1\3\2\2\2\u01af\u01ad")
+        buf.write("\3\2\2\2\u01b0\u01b2\t\t\2\2\u01b1\u01b0\3\2\2\2\u01b2")
+        buf.write("\u01b3\3\2\2\2\u01b3\u01b4\bB\5\2\u01b4\u0084\3\2\2\2")
+        buf.write("\u01b5\u01b9\7$\2\2\u01b6\u01b8\5\17\b\2\u01b7\u01b6\3")
+        buf.write("\2\2\2\u01b8\u01bb\3\2\2\2\u01b9\u01b7\3\2\2\2\u01b9\u01ba")
+        buf.write("\3\2\2\2\u01ba\u01bc\3\2\2\2\u01bb\u01b9\3\2\2\2\u01bc")
+        buf.write("\u01bd\7^\2\2\u01bd\u01be\n\n\2\2\u01be\u01bf\bC\6\2\u01bf")
+        buf.write("\u0086\3\2\2\2\u01c0\u01c1\7%\2\2\u01c1\u01c2\7%\2\2\u01c2")
+        buf.write("\u01cd\3\2\2\2\u01c3\u01c5\7%\2\2\u01c4\u01c3\3\2\2\2")
+        buf.write("\u01c4\u01c5\3\2\2\2\u01c5\u01c7\3\2\2\2\u01c6\u01c8\n")
+        buf.write("\13\2\2\u01c7\u01c6\3\2\2\2\u01c8\u01c9\3\2\2\2\u01c9")
+        buf.write("\u01c7\3\2\2\2\u01c9\u01ca\3\2\2\2\u01ca\u01cc\3\2\2\2")
+        buf.write("\u01cb\u01c4\3\2\2\2\u01cc\u01cf\3\2\2\2\u01cd\u01cb\3")
+        buf.write("\2\2\2\u01cd\u01ce\3\2\2\2\u01ce\u0088\3\2\2\2\u01cf\u01cd")
+        buf.write("\3\2\2\2\30\2\u008c\u008f\u0092\u0097\u009d\u00a5\u00aa")
+        buf.write("\u00ae\u00b4\u00bc\u00c0\u0187\u018e\u0194\u019e\u01ad")
+        buf.write("\u01b1\u01b9\u01c4\u01c9\u01cd\7\3\7\2\b\2\2\3A\3\3B\4")
+        buf.write("\3C\5")
         return buf.getvalue()
 
 
@@ -342,7 +352,6 @@ class CSELLexer(Lexer):
             actions[63] = self.ERROR_CHAR_action 
             actions[64] = self.UNCLOSE_STRING_action 
             actions[65] = self.ILLEGAL_ESCAPE_action 
-            actions[66] = self.UNTERMINATED_COMMENT_action 
             self._actions = actions
         action = self._actions.get(ruleIndex, None)
         if action is not None:
@@ -365,19 +374,12 @@ class CSELLexer(Lexer):
 
     def UNCLOSE_STRING_action(self, localctx:RuleContext , actionIndex:int):
         if actionIndex == 2:
-            raise UncloseString(self.text[1:])
+            self.text=self.text[1:] 
      
 
     def ILLEGAL_ESCAPE_action(self, localctx:RuleContext , actionIndex:int):
         if actionIndex == 3:
              raise IllegalEscape(self.text[1:])
-     
-
-    def UNTERMINATED_COMMENT_action(self, localctx:RuleContext , actionIndex:int):
-        if actionIndex == 4:
-
-                    raise UnterminatedComment(self.text[0:])
-                
      
 
 

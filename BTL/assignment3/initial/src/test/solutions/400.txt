@@ -1,0 +1,1 @@
+Type Mismatch In Expression: Program([FuncDecl(Id(main)[],[VarDecl(Id(x),NoneType),VarDecl(Id(x),NoneType)])])
