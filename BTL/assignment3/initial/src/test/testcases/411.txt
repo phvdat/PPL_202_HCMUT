@@ -1,0 +1,7 @@
+
+        Function main(){
+            Let a:Number;
+            Let b="string";
+            a = b;
+        }
+        

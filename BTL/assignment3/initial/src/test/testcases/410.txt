@@ -1,0 +1,6 @@
+
+        Function main(){
+            Let a:String;
+            a = 10.0;
+        }
+        

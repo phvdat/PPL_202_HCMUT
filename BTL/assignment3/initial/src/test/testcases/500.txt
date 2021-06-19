@@ -1,7 +1,6 @@
 
-        Let a = 10;
-        Let a: Boolean;
         Function main(){
+            Let a:String = "100";
             Let a;
         }
         

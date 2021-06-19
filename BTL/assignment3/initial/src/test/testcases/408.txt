@@ -1,0 +1,6 @@
+
+        Function main($a, $a){
+            Constant $c = 10;
+            Constant $d = "string";
+        }
+        

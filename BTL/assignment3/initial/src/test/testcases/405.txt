@@ -1,1 +1,5 @@
-Program([FuncDecl(Id(main)[],[[],[CallStmt(method=Id(name='printStrLn'), param=[])]])])
+
+        Let a:String = "100";
+        Let a;
+        Function main(){}
+        

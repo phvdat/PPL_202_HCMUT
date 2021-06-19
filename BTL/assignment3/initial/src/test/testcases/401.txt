@@ -1,5 +1,8 @@
-Function main() {
-            Let x;
-            Let x;
+
+        Function main1(){
+            Let a;
+        }
+        Function main2(){
+            Let a;
         }
         

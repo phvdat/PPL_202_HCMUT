@@ -1,0 +1,6 @@
+
+        Function main(a, b){
+            Constant $c = 10;
+            Constant $c = 11;
+        }
+        

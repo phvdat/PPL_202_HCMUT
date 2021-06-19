@@ -1,7 +1,7 @@
 
-        Let a = 10;
-        Let a: Boolean;
         Function main(){
             Let a;
+            Let b="string";
+            a = b;
         }
         

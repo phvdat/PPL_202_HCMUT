@@ -1,0 +1,5 @@
+Function main() {
+            Let x =10;
+            Let x;
+        }
+        
