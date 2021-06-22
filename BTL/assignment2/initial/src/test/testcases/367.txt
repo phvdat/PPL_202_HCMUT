@@ -1,7 +1,8 @@
 
-            Function main(){
-               While(a==b){
-                   c[x]=x*x;
-               }
-            
-         }
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            Return a+3;
+        
+        }
+        

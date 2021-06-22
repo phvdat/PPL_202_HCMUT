@@ -1,1 +1,4 @@
-Let x[5];
+
+                Let a[5]: Boolean = True;
+                Let b = 5;
+                

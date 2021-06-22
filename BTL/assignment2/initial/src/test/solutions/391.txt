@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(main)[],[Return()])])
+Program([VarDecl(Id(x),NumberType,JSONLiteral((Key=Id(name),Value=StringLiteral(Pham Van Dat)))])

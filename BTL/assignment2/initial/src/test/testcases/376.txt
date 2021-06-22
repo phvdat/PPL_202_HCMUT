@@ -1,3 +1,9 @@
-Function main(){
-            Continue;
+
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            For i Of json{
+                a =10;
+            }
         }
+        

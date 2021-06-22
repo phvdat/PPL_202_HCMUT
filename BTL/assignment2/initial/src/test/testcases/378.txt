@@ -1,6 +1,4 @@
-Function main(){
-            For i Of {name:"Hoang",age:"213"} {
-                Call(printLn, [i]);
-            }
+
+        Function foo(a[10]){
         }
         

@@ -1,0 +1,6 @@
+
+        Function main(){
+            Let a:Number = 100;
+            Let a;
+        }
+        

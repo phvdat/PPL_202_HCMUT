@@ -1,1 +1,6 @@
-Function a(x,y){} 
+Let x:Number;
+        Function foo(a[10]){
+            b = 100;
+            Constant $x:Number =10;
+        }
+        

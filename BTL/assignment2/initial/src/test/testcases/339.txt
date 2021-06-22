@@ -1,1 +1,5 @@
-Function a(){} 
+Let x:Number;
+        Function foo(a[10]){
+            x = 100;
+        }
+        

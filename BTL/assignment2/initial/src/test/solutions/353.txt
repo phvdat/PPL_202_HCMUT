@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(a)[],[VarDecl(Id(t),NoneType),VarDecl(Id(k),NoneType)])])
+Program([FuncDecl(Id(foo)[VarDecl(Id(a),[NumberLiteral(10.0)],NoneType)],[VarDecl(Id(a),NumberType,NumberLiteral(20.0)),VarDecl(Id(b),NumberType,NumberLiteral(10.0)),If(BinaryOp(==.,Id(love),StringLiteral(string)),[Assign(Id(crush),Id(hcmut))])Else([Assign(Id(like),Id(love))]),ConstDecl(Id($cons),NoneType,NumberLiteral(10.0)),If(BinaryOp(==,Id(love),StringLiteral(crush)),[Assign(Id(crush),BinaryOp(*,Id(crush),NumberLiteral(2.0)))])Else([Assign(Id(love),Id(like))])])])

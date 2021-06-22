@@ -1,1 +1,3 @@
-Constant $x:JSON =  {name:{name:"Hoa"}};
+
+            Let x:Number = !a+b;
+            

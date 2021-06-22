@@ -1,0 +1,7 @@
+
+        Function main(){
+            Let a;
+            Let b;
+            c = Call(sum, []);
+        }
+        

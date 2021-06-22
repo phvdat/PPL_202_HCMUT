@@ -1,0 +1,12 @@
+
+        Let x;
+        Function foo(x, b){
+            x = "string";
+            Return b;
+        }
+        Function main() {
+            Let c;
+            x = 10 + Call(foo, [c,3]);
+            c = 10;
+        }
+        

@@ -1,3 +1,19 @@
-Function a(){
-            Let x,y,z : Number;
-        } 
+
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            If(a>=b){
+                Constant $a:Number = 100;
+                Let b:String = "hcmut";
+            }
+            Elif(a!=10){
+                a = 30;
+            }
+            Elif( love ==. "string"){
+                crush = hcmut;
+            }
+            Else{
+                like = love;
+            }
+        }
+        

@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(Id(a),StringType,StringLiteral(100))
+Redeclared Variable: x

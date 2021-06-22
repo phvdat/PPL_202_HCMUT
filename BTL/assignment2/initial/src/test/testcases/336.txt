@@ -1,1 +1,5 @@
-Constant $x:JSON =  {name:"Hoa"} , $y : Number = 1 , $z : Number = 2;
+
+        Function main(a,b){
+            x = 10;
+            }
+        

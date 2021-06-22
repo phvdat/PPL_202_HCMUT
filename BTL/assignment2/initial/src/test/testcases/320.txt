@@ -1,1 +1,4 @@
-Constant $a = 123;
+
+            Constant $x[2]:Boolean = 5;
+            Let y = True;
+            

@@ -1,8 +1,11 @@
-Function main(){
-            For i Of {name:"Hoang",age:"213"} {
-                Call(printLn, [i]);
-                Call(printLn, [i]);
-                Call(printLn, [i]);
-                Call(printLn, [i]);
+
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            For i Of json{
+                Constant $a:Number = 100;
+                Let b:String = "hcmut";
+                Return "i love you";
             }
         }
+        

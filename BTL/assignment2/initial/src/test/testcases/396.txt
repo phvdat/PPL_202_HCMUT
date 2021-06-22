@@ -1,3 +1,5 @@
-Function main(){
-            a = a[1]+1;
-        }
+
+            Let x;
+            Constant $y: Number = 10;
+            Function main(x[], y) {}
+        

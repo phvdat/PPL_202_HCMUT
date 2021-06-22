@@ -1,7 +1,8 @@
 
-            Function main(){
-               For x Of y{
-
-               }
-            
-         }
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            Break;
+        
+        }
+        

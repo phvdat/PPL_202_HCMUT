@@ -1,0 +1,11 @@
+
+        Let x;
+        Function foo(a, b){
+            Let c:Number;
+            c = a;
+            a = x;
+        }
+        Function main() {
+            x = "back khoa";
+        }
+        

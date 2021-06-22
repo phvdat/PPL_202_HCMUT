@@ -1,6 +1,5 @@
 
         Function main(){
-            Let a;
             Let b="string";
             a = b;
         }

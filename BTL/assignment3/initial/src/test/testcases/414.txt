@@ -1,0 +1,7 @@
+
+        Function main(){
+            Let a[10]:Number = [1, 2, 3];
+            Let b;
+            Let a;
+        }
+        

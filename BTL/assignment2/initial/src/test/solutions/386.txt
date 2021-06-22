@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(main)[],[If(BinaryOp(==,ArrayAccess(Id(a),[Id(u)]),NumberLiteral(10.0)),[Return(Id(b))])Else([Return(Id(a))])])])
+Program([VarDecl(Id(x),NoneType,BinaryOp(==,NumberLiteral(2.0),NumberLiteral(5.0)))])

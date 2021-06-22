@@ -1,0 +1,11 @@
+
+        Function foo(){
+            Call(printSLn, ["Pham Van Dat"]);
+            Return;
+        }
+        Function main() {
+            Call(foo, []);
+            Call(foo2, [2]);
+            
+        }
+        

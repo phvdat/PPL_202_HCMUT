@@ -1,3 +1,5 @@
-Function a(){
-            Constant $t[1]=1,$k:Number=2;
-        } 
+
+                Function main() {
+                    Call(foo, [1,2]){"name"} = "Pham Van Dat";
+                }
+        

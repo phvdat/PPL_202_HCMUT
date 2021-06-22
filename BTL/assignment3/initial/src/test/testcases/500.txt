@@ -1,6 +1,1 @@
-
-        Function main(){
-            Let a:String = "100";
-            Let a;
-        }
-        
+Program([FuncDecl(Id(main)[],[[],[CallStmt(method=Id(name='printStrLn'), param=[])]])])

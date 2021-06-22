@@ -1,1 +1,3 @@
-Constant $x[5] =1 ;
+
+            Let x:Number = 100*10;
+            

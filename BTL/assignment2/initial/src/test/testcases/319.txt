@@ -1,1 +1,4 @@
-Let x[5]:Number;
+
+            Constant $x[2]:Boolean = 5;
+            Constant $y = True;
+            Constant $z[1] = 40;

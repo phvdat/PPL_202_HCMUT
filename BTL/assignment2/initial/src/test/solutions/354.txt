@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(a)[],[ConstDecl(Id($t),[NumberLiteral(1.0)],NoneType,NumberLiteral(1.0)),ConstDecl(Id($k),NumberType,NumberLiteral(2.0))])])
+Program([FuncDecl(Id(main)[],[Assign(JSONAccess(CallExpr(Id(foo),[NumberLiteral(1.0),NumberLiteral(2.0)]),[StringLiteral(name)]),StringLiteral(Pham Van Dat))])])

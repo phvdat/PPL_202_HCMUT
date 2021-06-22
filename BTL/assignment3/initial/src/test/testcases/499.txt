@@ -1,5 +1,1 @@
-Function main() {
-            Let x =10;
-            Let x;
-        }
-        
+Program([FuncDecl(Id(main)[],[[],[CallStmt(method=Id(name='printSLn'), param=[CallExpr(method=Id(name='read'), param=[NumberLiteral(value=4.0)])])]])])

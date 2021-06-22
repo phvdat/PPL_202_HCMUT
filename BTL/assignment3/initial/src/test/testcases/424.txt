@@ -1,0 +1,9 @@
+
+        Function foo(a, b){
+            Let c:Number;
+            c = a;
+        }
+        Function main() {
+            Call(printStrLn, [Call(read, [4])]);
+        }
+        

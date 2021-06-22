@@ -1,1 +1,1 @@
-Program([VarDecl(Id(x),NumberType)])
+Program([VarDecl(Id(a),[NumberLiteral(5.0)],BooleanType,BooleanLiteral(true)),VarDecl(Id(b),NoneType,NumberLiteral(5.43)),VarDecl(Id(c),NumberType)])

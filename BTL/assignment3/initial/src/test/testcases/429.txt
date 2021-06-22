@@ -1,0 +1,7 @@
+
+        Function main(){
+            Let a = {name: "Pham", age:21};
+            a{"name"} = 10;
+            b = 100;
+        }
+        

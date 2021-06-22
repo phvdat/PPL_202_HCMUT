@@ -1,3 +1,11 @@
-Function main(){
-            Call(goo, []);
+
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            For i In arr{
+                Constant $a:Number = 100;
+                Let b:String = "hcmut";
+                Return "i love you";
+            }
         }
+        

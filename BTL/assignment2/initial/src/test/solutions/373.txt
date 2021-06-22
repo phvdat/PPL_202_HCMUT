@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(main)[],[CallStmt(Id(foo),[BinaryOp(+,NumberLiteral(2.0),Id(x)),BinaryOp(/,NumberLiteral(4.0),Id(y))])])])
+Program([FuncDecl(Id(foo)[VarDecl(Id(a),[NumberLiteral(10.0)],NoneType)],[VarDecl(Id(a),NumberType,NumberLiteral(20.0)),VarDecl(Id(b),NumberType,NumberLiteral(10.0)),ForIn(Id(i),Id(arr),[Assign(Id(a),NumberLiteral(10.0))])])])

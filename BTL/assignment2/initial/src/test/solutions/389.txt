@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(main)[],[If(BinaryOp(==,ArrayAccess(Id(a),[Id(u)]),NumberLiteral(10.0)),[Return(Id(b))])])])
+Program([VarDecl(Id(x),NumberType,JSONLiteral((Key=Id(name),Value=StringLiteral(Pham Van Dat)),(Key=Id(age),Value=NumberLiteral(21.0)))])

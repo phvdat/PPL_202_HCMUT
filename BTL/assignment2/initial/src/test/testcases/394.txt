@@ -1,3 +1,4 @@
-Function main(){
-            a{"name"}[1] =1;
-        }
+
+            Let x;
+            Function main(x[10], y) {}
+        

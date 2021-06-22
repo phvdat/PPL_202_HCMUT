@@ -1,1 +1,3 @@
-Let x : Number;
+
+                Let a[5]: Boolean = True,b = 5.43, c:Number;
+                

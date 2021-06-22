@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(a)[VarDecl(Id(x),[NumberLiteral(5.0)],NoneType),VarDecl(Id(y),[NumberLiteral(0.0)],NoneType),VarDecl(Id(z),NoneType)],[])])
+Program([VarDecl(Id(x),NumberType),FuncDecl(Id(foo)[VarDecl(Id(a),[NumberLiteral(10.0)],NoneType)],[If(NumberLiteral(5.0),[ConstDecl(Id($a),NumberType,NumberLiteral(100.0))])])])

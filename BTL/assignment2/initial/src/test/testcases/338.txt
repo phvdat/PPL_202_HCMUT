@@ -1,3 +1,5 @@
-
-            Let x=2==.5;
-         }
+Let x:Number;
+        Function foo(){
+            x = 10;
+        }
+        

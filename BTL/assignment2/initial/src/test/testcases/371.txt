@@ -1,12 +1,9 @@
-Function main(){
-            Let i = 0;
 
-            While(i<5){
-                a[i] = b + 1;
-                Let u: Number = i + 1;
-                If (a[u] == 10) {
-                    Return a[i];
-                }
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            For i In arr{
+                Let a;
             }
-            Return -1;
         }
+        

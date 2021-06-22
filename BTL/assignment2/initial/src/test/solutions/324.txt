@@ -1,1 +1,1 @@
-Program([ConstDecl(Id($x),NoneType,ArrayLiteral(NumberLiteral(1.0),NumberLiteral(2.0)))])
+Program([ConstDecl(Id($x),[NumberLiteral(2.0)],BooleanType,BinaryOp(>,NumberLiteral(100.0),UnaryOp(!,NumberLiteral(3.0))))])

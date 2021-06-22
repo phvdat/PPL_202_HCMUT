@@ -1,7 +1,14 @@
 
-            Function main(){
-               For x In []{
-
-               }
-            
-         }
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            While(crush == "crush"){
+                status = "Yes";
+                action = "No";
+                While(age>18){
+                    mode = "Fboy";
+                }
+            }
+        
+        }
+        

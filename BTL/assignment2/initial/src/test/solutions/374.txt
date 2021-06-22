@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(main)[],[CallStmt(Id(goo),[])])])
+Program([FuncDecl(Id(foo)[VarDecl(Id(a),[NumberLiteral(10.0)],NoneType)],[VarDecl(Id(a),NumberType,NumberLiteral(20.0)),VarDecl(Id(b),NumberType,NumberLiteral(10.0)),ForIn(Id(i),Id(arr),[ConstDecl(Id($a),NumberType,NumberLiteral(100.0)),VarDecl(Id(b),StringType,StringLiteral(hcmut)),Return(StringLiteral(i love you))])])])

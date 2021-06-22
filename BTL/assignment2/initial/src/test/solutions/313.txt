@@ -1,1 +1,1 @@
-Program([VarDecl(Id(x),NumberType,NumberLiteral(1.0))])
+Program([ConstDecl(Id($a),[NumberLiteral(10.0)],NoneType,NumberLiteral(100.0))])

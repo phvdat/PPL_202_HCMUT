@@ -1,5 +1,2 @@
-Function main(){
-            If (a[u] == 10) {
-                Return b;
-            }
-        }
+Let x:Number = {name: "Pham Van Dat", age: 21};
+        

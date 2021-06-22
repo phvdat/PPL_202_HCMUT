@@ -1,1 +1,1 @@
-Program([ConstDecl(Id($x),NoneType,BooleanLiteral(true))])
+Program([ConstDecl(Id($x),[NumberLiteral(2.0)],BooleanType,NumberLiteral(5.0)),VarDecl(Id(y),NoneType,BinaryOp(+,NumberLiteral(2.0),NumberLiteral(2.0)))])

@@ -1,10 +1,3 @@
-Function main(){
-            If (a[u] == 10) {
-                Return b;
-                Return c;
-            }Else{
-                Return a;
-                Return b;
-                Return c;
-            }
-        }
+
+            Let x=a[3+1,4]/Call(bool2str,[!3<2]);
+         

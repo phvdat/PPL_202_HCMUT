@@ -1,3 +1,9 @@
-Function main(){
-            Call(foo, [2 + x, 4 / y]);
+
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            For i In arr{
+                a =10;
+            }
         }
+        

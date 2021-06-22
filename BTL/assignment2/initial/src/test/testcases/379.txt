@@ -1,5 +1,5 @@
-Function main(){
-            For i In a {
-                Call(printLn, [i]);
-            }
+
+        Function foo(a[10]){
+            Call(bool2str,[!3<2]);
         }
+        

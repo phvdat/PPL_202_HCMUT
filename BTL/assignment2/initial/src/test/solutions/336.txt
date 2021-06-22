@@ -1,1 +1,1 @@
-Program([ConstDecl(Id($x),JSONType,JSONLiteral((Key=Id(name),Value=StringLiteral(Hoa))),ConstDecl(Id($y),NumberType,NumberLiteral(1.0)),ConstDecl(Id($z),NumberType,NumberLiteral(2.0))])
+Program([FuncDecl(Id(main)[VarDecl(Id(a),NoneType),VarDecl(Id(b),NoneType)],[Assign(Id(x),NumberLiteral(10.0))])])

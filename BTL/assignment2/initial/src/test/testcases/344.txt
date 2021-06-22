@@ -1,2 +1,7 @@
-Function a(x[5]){}
-        Function a(x[5]){} 
+Let x:Number;
+        Function foo(a[10]){
+            If(5){
+                a = 100;
+            }
+        }
+        

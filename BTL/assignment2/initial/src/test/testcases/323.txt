@@ -1,1 +1,4 @@
-Constant $x = [1];
+
+            Constant $x[2]:Boolean = 2>3;
+            Let y = 2+"Pham";
+            

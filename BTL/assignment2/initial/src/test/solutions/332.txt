@@ -1,1 +1,1 @@
-Program([ConstDecl(Id($x),StringType,StringLiteral(abc))])
+Program([VarDecl(Id(x),NumberType,JSONAccess(Id(a),[StringLiteral(name)]))])

@@ -1,0 +1,4 @@
+Function main() {
+            Call(printSLn, [5]);
+            Let a = 10;
+        }

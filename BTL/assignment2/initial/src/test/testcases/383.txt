@@ -1,12 +1,3 @@
-Function main(){
-            If (a[u] == 10) {
-                Return b;
-            }Elif(b){
-                Return c;
-                Return d;
-                Return e;
-            }Else{
-                Return y;
-                Return z;
-            }
-        }
+
+            Let x=Call(x,[]);
+         

@@ -1,1 +1,1 @@
-Let x :Number = 1;
+Constant $a[10] = 100;

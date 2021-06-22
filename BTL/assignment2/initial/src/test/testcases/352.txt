@@ -1,3 +1,12 @@
-Function a(){
-            Let x,y,z : Number, k,m,n : Boolean,t,k;
-        } 
+
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            If(love ==. "string"){
+                crush = hcmut;
+            }
+            Else{
+                like = love;
+            }
+        }
+        

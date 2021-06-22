@@ -1,3 +1,8 @@
-Function a(x[5]){
-            
-        } 
+Let x:Number;
+        Function foo(a[10]){
+            If(5){
+                Constant $a:Number = 100;
+                Let b:String = "hcmut";
+            }
+        }
+        

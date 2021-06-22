@@ -1,3 +1,2 @@
-Function main(){
-            Return a;
-        }
+Let x:Number = [1,2,3];
+        

@@ -1,1 +1,1 @@
-Let x:JSON =  {name:"Hoa"} , y : Number = 1 , z : Number = 2;
+Constant $x[2]:Boolean = 5, $y = True, $z[1] = 40;

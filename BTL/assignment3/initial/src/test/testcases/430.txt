@@ -1,0 +1,16 @@
+
+        Function main(){
+            Let a;
+            Let b;
+            if(a){
+                Let c= 100;
+            }
+            elif(b){
+                Let d = 10;
+            }
+            else{
+                Constant $e = "Pham";
+            }
+            return 0;
+        }
+        

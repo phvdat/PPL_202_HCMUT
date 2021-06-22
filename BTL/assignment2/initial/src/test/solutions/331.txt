@@ -1,1 +1,1 @@
-Program([ConstDecl(Id($x),NumberType,NumberLiteral(1.0)),ConstDecl(Id($y),StringType,NumberLiteral(1.0)),ConstDecl(Id($z),JSONType,NumberLiteral(1.0)),ConstDecl(Id($k),BooleanType,NumberLiteral(1.0))])
+Program([VarDecl(Id(x),NumberType,ArrayAccess(Id(a),[NumberLiteral(10.0)]))])

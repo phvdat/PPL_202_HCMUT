@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(main)[],[ForIn(Id(x),Id(ab),[])])])
+Program([FuncDecl(Id(foo)[VarDecl(Id(a),[NumberLiteral(10.0)],NoneType)],[VarDecl(Id(a),NumberType,NumberLiteral(20.0)),VarDecl(Id(b),NumberType,CallExpr(Id(foo),[Id(c),BinaryOp(+,NumberLiteral(2.0),NumberLiteral(3.0))]))])])

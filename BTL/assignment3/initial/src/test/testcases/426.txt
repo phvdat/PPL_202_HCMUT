@@ -1,0 +1,10 @@
+
+        Let x;
+        Function foo(x, b){
+            x = 10;
+        }
+        Function main() {
+            x = "back khoa";
+            c = 10;
+        }
+        

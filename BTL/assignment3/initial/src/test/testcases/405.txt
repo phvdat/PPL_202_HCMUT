@@ -1,5 +1,5 @@
-
-        Let a:String = "100";
-        Let a;
-        Function main(){}
+Function main() {
+            Let x =10;
+            Let x;
+        }
         

@@ -1,3 +1,2 @@
-Function main(){
-            Return ;
-        }
+Let x:Number = {name: "Pham Van Dat"};
+        

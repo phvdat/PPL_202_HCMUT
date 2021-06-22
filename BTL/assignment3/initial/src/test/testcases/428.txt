@@ -1,0 +1,11 @@
+
+        Let x;
+        Function foo(x, b){
+            x = "string";
+            Return "HCMUT";
+        }
+        Function main() {
+            Let c;
+            x = 10 + Call(foo, [c,3]);
+        }
+        

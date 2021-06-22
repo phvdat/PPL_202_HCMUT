@@ -1,3 +1,2 @@
-Function main(){
-            a[Call(foo, [2])] = a[b{"name"}{"first"}] ;
-        }
+Let x:Number = 10+11+12;
+        

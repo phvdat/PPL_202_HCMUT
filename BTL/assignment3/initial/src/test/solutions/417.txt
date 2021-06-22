@@ -1,0 +1,1 @@
+Type Mismatch In Statement: VarDecl(Id(a),StringType,JSONLiteral((Key=Id(name),Value=StringLiteral(Pham)),(Key=Id(age),Value=NumberLiteral(21.0)))

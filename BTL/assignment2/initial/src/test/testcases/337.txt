@@ -1,1 +1,5 @@
-Constant $x[5]:Number = [1,2];
+Let x:Number;
+        Function foo(a){
+            x = 10;
+        }
+        

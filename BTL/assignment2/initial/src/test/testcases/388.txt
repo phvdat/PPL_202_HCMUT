@@ -1,6 +1,3 @@
-Function main(){
-            If (a[u] == 10) {
-                Return b;
-                Return a[i];
-            }
-        }
+
+            Let x=2&&5;
+        

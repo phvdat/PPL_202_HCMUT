@@ -1,3 +1,19 @@
-Function a(){
-            Let t,k;
-        } 
+
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            If(love ==. "string"){
+                crush = hcmut;
+            }
+            Else{
+                like = love;
+            }
+            Constant $cons = 10;
+            If(love == "crush"){
+                crush = crush*2;
+            }
+            Else{
+                love = like;
+            }
+        }
+        

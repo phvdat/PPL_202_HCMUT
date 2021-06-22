@@ -1,1 +1,1 @@
-Let x;Let y;
+Let a[5]: Boolean = True;

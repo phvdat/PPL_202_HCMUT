@@ -116,5 +116,5 @@ class KeyNotFound(StaticError):
     cell: JSONAccess
 
     def __str__(self):
-        return "Key Not Fount: " + str(self.cell)
+        return "Key Not Found: " + str(self.cell)
 

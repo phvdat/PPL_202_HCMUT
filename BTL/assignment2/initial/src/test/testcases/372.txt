@@ -1,5 +1,8 @@
-Function main(){
-            While(i<5){
-                Return;
+
+        Function foo(a[10]){
+            For i In [1, 2, 3] {
+                Call(printLn, [i]);
             }
+
         }
+        

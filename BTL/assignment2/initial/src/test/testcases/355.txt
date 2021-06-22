@@ -1,8 +1,15 @@
 
-            Function main(){
-                If(a==1){ a=4;}
-                Elif(a==2){a=5;}
-                Elif(a==3){a=8;}
-                Else{a=10;}
-            
-         }
+        Function foo(a[10]){
+            Let a:Number = 20;
+            Let b:Number = 10;
+            If(love ==. "string"){
+                crush = hcmut;
+                If(crush == "crush"){
+                    status = "Yes";
+                }
+                Else{
+                    status = "No";
+                }
+            }
+        }
+        

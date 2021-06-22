@@ -1,3 +1,5 @@
+# Pham Van Dat
+# 181192
 from abc import ABC, abstractmethod, ABCMeta
 from dataclasses import dataclass
 from typing import List, Tuple
@@ -18,23 +20,32 @@ class Prim(Type):
 
 
 class NumberType(Prim):
-    pass
+    def __str__(self):
+        return "NumberType"
 
 
 class StringType(Prim):
-    pass
+    def __str__(self):
+        return "StringType"
 
 
 class BoolType(Prim):
-    pass
+    def __str__(self):
+        return "BooleanType"
+
 
 class VoidType(Type):
-    pass
+    def __str__(self):
+        return "VoidType"
 
 
 class Unknown(Type):
-    pass
-    
+    def __str__(self):
+        return "Unknown"
+
+class JSONType(Type):
+    def __str__(self):
+        return "JSONType"
 
 
 @dataclass
@@ -55,38 +66,38 @@ class Symbol:
     mtype: Type
 
 
+def setType(id, c, typ):
+    for i in c:
+        if id.name == i.name:
+            i.mtype.restype = typ()
+            break
+calledFunc = []
+
 class StaticChecker(BaseVisitor):
     def __init__(self, ast):
         self.ast = ast
         self.global_envi = [
+
             Symbol("read", MType([], StringType())),
             Symbol("print", MType([StringType()], VoidType())),
             Symbol("printSLn", MType([StringType()], VoidType()))]
 
     def check(self):
         return self.visit(self.ast, self.global_envi)
-    # func set type
-
-    def setType(id, c, typ):
-        for i in c:
-            if id.name == i.name:
-                i.mtype.restype = typ
 
     # decl: List[Decl]
     def visitProgram(self, ast, c):
-        c = [
-            Symbol("read", MType([], StringType())),
-            Symbol("print", MType([StringType()], VoidType())),
-            Symbol("printSLn", MType([StringType()], VoidType()))]
-
-        self.func_unused = []
-        self.func_call_func = None
+        c = self.global_envi[:]
+        
         # Check main function
         is_main = False
         for x in ast.decl:
             if isinstance(x, FuncDecl) and x.name.name == 'main':
                 is_main = True
                 break
+        if not is_main:
+            raise NoEntryPoint()
+
         # Check Redeclare
         for x in ast.decl:
             if isinstance(x, VarDecl):
@@ -96,31 +107,18 @@ class StaticChecker(BaseVisitor):
                 c.append(self.visit(x, c))
 
             elif isinstance(x, FuncDecl):
-                func = Symbol(x.name.name, MType(self.visit(x, c), NoneType))
+                lst_typ, return_typ = self.visit(x, c)
+                func = Symbol(x.name.name, MType(lst_typ, return_typ))
                 for i in c:
                     if i.name == func.name:
                         raise Redeclared(Function(), func.name)
-
                 c.append(func)
 
-                if func.name != 'main':
-                    self.func_unused.append(func)
 
-        if not is_main:
-            raise NoEntryPoint()
-
-        for x in ast.decl:
-            if isinstance(x, FuncDecl):
-                self.func_call_func = x.name.name
-                self.visit(x, c)
-
-        if self.func_unused:
-            raise UnreachableFunction(self.func_unused[0].name)
     # variable: Id
     # varDimen: List[Expr]     # empty list for scalar variable
     # typ: Type               # NoneType if empty
     # varInit: Expr           # None if no initial
-
     def visitVarDecl(self, ast, c):
         for i in c:
             if i.name == ast.variable.name:
@@ -128,25 +126,40 @@ class StaticChecker(BaseVisitor):
         lst = ast.varDimen
         if lst:
             for i in lst:
-                if(not isinstance(i, NumberType)):
-                    raise TypeMismatchInStatement(ast)
-        
+                if(not isinstance(self.visit(i, c), NumberType)):
+                    raise TypeMismatchInExpression(ast)
+
         vartype = ast.typ
         if ast.varInit:
             vInit = self.visit(ast.varInit, c)
-        if (str(ast.typ) ==  'NoneType') and (ast.varInit is None):
-            return Symbol(ast.variable.name, MType([], NoneType))
+        # =======================ARRAY========================
+        if lst: # if array declare
+            if ast.varInit:
+                if not isinstance(vInit,ArrayType):     # if rhs not array type
+                    raise TypeMismatchInStatement(ast)
+            if isinstance(vartype, ArrayType):      # if type elem = arraytype => false
+                raise TypeMismatchInStatement(ast)
+            return Symbol(ast.variable.name, MType([], ArrayType(lst,vartype)))
+        
+        # =======================JSON========================
+        if ast.varInit:
+            if str(vInit) == str(JSONType()):
+                if str(vartype) != "NoneType":
+                    raise TypeMismatchInStatement(ast)
+                return Symbol(ast.variable.name, MType([], JSONType()))
+
+
+        # ==============NUMBER, STRING, BOOLEAN===============
+        if (str(vartype) ==  'NoneType') and (ast.varInit is None):
+            return Symbol(ast.variable.name, MType([], NoneType()))
         elif (ast.varInit is None):
             return Symbol(ast.variable.name, MType([], vartype))
-        elif (str(ast.typ) ==  'NoneType'):
+        elif (str(vartype) ==  'NoneType'):
             return Symbol(ast.variable.name, MType([], vInit))
-        else:
-            if str(type(vartype)) =="<class 'AST.StringType'>"  and str(type(vInit)) != "<class 'StaticCheck.StringType'>":
-                raise TypeMismatchInStatement(ast)
-            if str(type(vartype)) =="<class 'AST.NumberType'>"  and str(type(vInit)) != "<class 'StaticCheck.NumberType'>":
-                raise TypeMismatchInStatement(ast)
-            if str(type(vartype)) =="<class 'AST.BoolType'>"  and str(type(vInit)) != "<class 'StaticCheck.BoolType'>":
-                raise TypeMismatchInStatement(ast)
+        elif str(vartype) != str(vInit):
+            raise TypeMismatchInStatement(ast)
+        # elif not issubclass(type(vInit), type(vartype)):
+        #     raise TypeMismatchInStatement(ast)
 
         return Symbol(ast.variable.name, MType([], vartype))
 
@@ -162,81 +175,114 @@ class StaticChecker(BaseVisitor):
         lst = ast.constDimen
         if lst:
             for i in lst:
-                if(not isinstance(i, NumberType)):
+                if(not isinstance(self.visit(i, c), NumberType)):
                     raise TypeMismatchInStatement(ast)
         
         vartype = ast.typ
+        vInit = self.visit(ast.constInit, c)
+
+        # =======================ARRAY========================
+        if lst: # if array declare
+            if not isinstance(vInit,ArrayType):     # if rhs not array type
+                raise TypeMismatchInStatement(ast)
+            if isinstance(vartype, ArrayType):      # if type elem = arraytype => false
+                raise TypeMismatchInStatement(ast)
+            return Symbol(ast.variable.name, MType([], ArrayType(lst,vartype)))
+
+
+
+        # =======================JSON========================
         if ast.constInit:
-            vInit = self.visit(ast.constInit, c)
+            if str(vInit) == str(JSONType()):
+                if str(vartype) != "NoneType":
+                    raise TypeMismatchInStatement(ast)
+                return Symbol(ast.variable.name, MType([], JSONType()))
+
+
+        # ==============NUMBER, STRING, BOOLEAN===============
         if (str(ast.typ) ==  'NoneType') and (ast.constInit is None):
-            return Symbol(ast.constant.name, MType([], NoneType))
+            return Symbol(ast.constant.name, MType([], NoneType()))
         elif (ast.constInit is None):
             return Symbol(ast.constant.name, MType([], vartype))
         elif (str(ast.typ) ==  'NoneType'):
-            return Symbol(ast.constant.name, MType([], type(vInit)))
-        else:
-            if str(vartype) == 'NumberType':
-                if not isinstance(vInit,NumberType):
-                    raise TypeMismatchInStatement(ast)
-            elif str(vartype) == 'StringType':
-                if not isinstance(vInit,StringType):
-                    raise TypeMismatchInStatement(ast)
-            elif str(vartype) == 'BoolType':
-                if not isinstance(vInit,BoolType):
-                    raise TypeMismatchInStatement(ast)
-                    
+            return Symbol(ast.constant.name, MType([], vInit))
+        elif vartype != vInit:
+            raise TypeMismatchInStatement(ast)
+        
         return Symbol(ast.constant.name, MType([], vartype))
+
     # name: Id
     # param: List[VarDecl]
     # body: List[Inst]
     def visitFuncDecl(self, ast, c):
+        
         local_envi = []
         para_list = []
-
+        return_typ = None
         for param in ast.param:
-            if param.variable in para_list:
+            if param.variable.name in para_list:
                 raise Redeclared(Parameter(), param.variable.name)
 
             else:
-                para_list.append(param.variable)
+                para_list.append(param.variable.name)
                 local_envi.append(self.visit(param, local_envi))
-        temp = local_envi[:]
         
+        rt_param_lst = local_envi
+        local_envi_c = local_envi + c
+
         for stmt in ast.body:    
             if isinstance(stmt, VarDecl):
+                local_envi_c.append(self.visit(stmt, local_envi))
                 local_envi.append(self.visit(stmt, local_envi))
-
+                
             elif isinstance(stmt, ConstDecl):
+                local_envi_c.append(self.visit(stmt, local_envi))
                 local_envi.append(self.visit(stmt, local_envi))
-            
             else:
-                self.visit(stmt, local_envi + c)
-        return [x.mtype.restype for x in temp]
+
+                if isinstance(stmt, Return):
+                    return_typ = self.visit(stmt, local_envi_c)
+                else:
+                    self.visit(stmt, local_envi_c)
+
+        return [x.mtype.restype for x in rt_param_lst] , return_typ
+
+        # temp=[i.name for i in local_envi]    # mảng các tên biến trong block
+        # for x in c:
+        #     if x.name not in temp: # tim biến  thuộc o k dc khai báo trong block
+        #         for y in local_envi_c:
+        #             if x.name==y.name: # mà dc sử dụng trong block
+        #                 c.remove(x)
+        #                 c.append(y)
 
     # lhs: LHS
     # rhs: Expr
     def visitAssign(self, ast, c):
-        typ1=self.visit(ast.lhs,c)
-        typ2=self.visit(ast.rhs,c)
-        typ = [NumberType, StringType, BoolType]
-        if type(typ2) not in typ and type(typ1) not in typ:
-            raise TypeCannotBeInferred(type(typ2))
-        # if not typ1 in [NumberType, StringType, BooleanType] and not typ2 in [NumberType, StringType, BooleanType]:
-        #     raise TypeCannotBeInferred(type(typ2))
-        # if not typ1 in [NumberType, StringType, BooleanType]:
-        #     setType(ctx.lhs, o, typ2)
-        #     typ1 = typ2
-        # if not typ2 in [NumberType, StringType, BooleanType]:
-        #     setType(ctx.rhs, o, typ1)
-        #     typ2 = typ1
-        # if typ1!=typ2:
-        #     raise TypeMismatchInStatement(typ1)
-        # return typ1
-        raise TypeCannotBeInferred(type(typ2))
 
+        typ2=self.visit(ast.rhs,c)
+        typ1=self.visit(ast.lhs,c)
+        if type(typ1) is VoidType or type(typ2) is VoidType:
+            raise TypeMismatchInStatement(ast)
+        if type(typ1) is ArrayType or type(typ1) is JSONType:
+            pass
+        else:
+            if type(typ2) is NoneType and type(typ1) is NoneType:
+                raise TypeCannotBeInferred(ast)
+            if type(typ1) is NoneType:
+                setType(ast.lhs, c, type(typ2))
+                typ1 = typ2
+            if type(typ2) is NoneType:
+                setType(ast.rhs, c, type(typ1))
+                typ2 = typ1
+            if str(typ1) != str(typ2):
+                raise TypeMismatchInStatement(ast)
     # ifthenStmt: List[Tuple[Expr, List[Inst]]]
     # elseStmt: List[Inst]  # for Else branch, empty list if no Else
-    def visitIf(self, ast, c): pass
+    def visitIf(self, ast, c):
+        local_envi = []
+        ifthemStmt = ast.ifthenStmt
+        # for ifthen in ifthemStmt:
+            
 
     # exp: Expr
     # sl: List[Inst]
@@ -247,48 +293,67 @@ class StaticChecker(BaseVisitor):
     # body: List[Inst]
     def visitFor(self, ast, c): pass
 
-    def visitBreak(self, ast, c):
-        if c[1] == False:
-            raise BreakNotInLoop()
-
-    def visitContinue(self, ast, c):
-        if c[1] == False:
-            raise ContinueNotInLoop()
+    def visitBreak(self, ast, c):pass
+    def visitContinue(self, ast, c):pass
 
     # expr: Expr  # None if no expression
     def visitReturn(self, ast, c):
-        return_type = c[-1]
         if not ast.expr:
-            if not isinstance(return_type, VoidType):
-                raise TypeMismatchInStatement(ast)
-
-        elif isinstance(return_type, VoidType):
-            raise TypeMismatchInStatement(ast)
-
+            return VoidType()
         else:
-            envi = c[0]
-            rlt_expr = self.visit(ast.expr, envi)
-            if isinstance(rlt_expr, ArrayType):
-                if not isinstance(rlt_expr.eleType, type(return_type.eleType)):
-                    raise TypeMismatchInStatement(ast)
-            else:
-                raise TypeMismatchInStatement(ast)
+            return self.visit(ast.expr, c)
+            
+    # method: Id
+    # param: List[Expr]
+    def visitCallStmt(self, ast, c):
 
-            if isinstance(return_type, NumberType):
-                if not isinstance(rlt_expr, NumberType):
-                    raise TypeMismatchInStatement(ast)
+        param_lst = [self.visit(x,c) for x in ast.param]
+        # raise TypeMismatchInExpression(param_lst)
 
-            elif not isinstance(rlt_expr, type(return_type)):
-                raise TypeMismatchInStatement(ast)
-        return True  # function have returned
+        for elem in c:
+            if ast.method.name == elem.name:
+                if type(elem.mtype.restype) is not VoidType:
+                    raise TypeMismatchInStatement(ast)
+                elif len(elem.mtype.intype) != len(param_lst):
+                    raise TypeMismatchInStatement(ast)
+                
+                else:
+                    for i in range(len(param_lst)):
+                        if str(elem.mtype.intype[i]) == 'NoneType' and str(param_lst[i]) =='NoneType':
+                            raise TypeMismatchInStatement(ast)
+                        elif str(elem.mtype.intype[i]) == 'NoneType':
+                            elem.mtype.intype[i] = param_lst[i]
+                        elif str(param_lst[i]) == 'NoneType':
+                            setType(ast.param[i], c, type(elem.mtype.intype[i]))
+                        elif str(elem.mtype.intype[i]) != str(param_lst[i]):
+                            raise TypeMismatchInStatement(ast)
+                return elem.mtype.restype
+        raise Undeclared(Function(), ast.method.name)
 
     # method: Id
     # param: List[Expr]
-    def visitCallExpr(self, ast, c): pass
+    def visitCallExpr(self, ast, c):
+        param_lst = [self.visit(x,c) for x in ast.param]
 
-    # method: Id
-    # param: List[Expr]
-    def visitCallStmt(self, ast, c): pass
+        for elem in c:
+
+            if ast.method.name == elem.name:
+                if len(elem.mtype.intype) != len(param_lst):
+                    raise TypeMismatchInExpression(ast)
+                
+                else:
+
+                    for i in range(len(param_lst)):
+                        if str(elem.mtype.intype[i]) == 'NoneType' and str(param_lst[i]) =='NoneType':
+                            raise TypeMismatchInExpression(ast)
+                        elif str(elem.mtype.intype[i]) == 'NoneType':
+                            elem.mtype.intype[i] = param_lst[i]
+                        elif str(param_lst[i]) == "NoneType":
+                            setType(ast.param[i], c, type(elem.mtype.intype[i]))
+                        elif str(elem.mtype.intype[i]) != str(param_lst[i]):
+                            raise TypeMismatchInExpression(ast)
+                return elem.mtype.restype
+        raise Undeclared(Function(), ast.method.name)
 
     # op: str
     # left: Expr
@@ -298,30 +363,88 @@ class StaticChecker(BaseVisitor):
         left = self.visit(ast.left, c)
         right = self.visit(ast.right, c)
 
-        if op in ['+', '-', '*', '/', '%', '==', '!=', '<', '>', '<=', '>=']:
-            if isinstance(left, NumberType) and isinstance(right, NoneType):
-                setType(ast.right, c, NumberType)
-            elif isinstance(right, NumberType) and isinstance(left, NoneType):
-                setType(ast.left, c, NumberType)
-            elif not isinstance(left, type(right)):
-                raise TypeMismatchInExpression(right)
+        if op in ['+', '-', '*', '/', '%']:
+            if isinstance(left, NoneType):
+                if isinstance(ast.left, CallExpr):
+                    setType(ast.left.method, c, NumberType)
+                else:
+                    setType(ast.left, c, NumberType)
+                left = NumberType()
+            if isinstance(right, NoneType):
+                if isinstance(ast.right, CallExpr):
+                    setType(ast.right.method, c, NumberType)
+                else:
+                    setType(ast.right, c, NumberType)
+                right = NumberType()
+            if not isinstance(right, NumberType) or not isinstance(left, NumberType):
+                raise TypeMismatchInExpression(ast)
             return NumberType()
-
-        elif op in ['&&', '||']:
-            if isinstance(left, BoolType) and isinstance(right, NoneType):
-                setType(ast.right, c, BoolType)
-            elif isinstance(right, BoolType) and isinstance(left, NoneType):
-                setType(ast.left, c, BoolType)
-            elif not isinstance(left, type(right)):
+        
+        elif op in ['==', '!=', '<', '>', '<=', '>=']:
+            if isinstance(left, NoneType):
+                if isinstance(ast.left, CallExpr):
+                    setType(ast.left.method, c, NumberType)
+                else:
+                    setType(ast.left, c, NumberType)
+                left = NumberType()
+            if isinstance(right, NoneType):
+                if isinstance(ast.right, CallExpr):
+                    setType(ast.right.method, c, NumberType)
+                else:
+                    setType(ast.right, c, NumberType)
+                right = NumberType()
+            if not isinstance(right, NumberType) or not isinstance(left, NoneType):
                 raise TypeMismatchInExpression(ast)
             return BoolType()
 
-        elif op in ['==.', '+.']:
-            if isinstance(left, StringType) and isinstance(right, NoneType):
-                setType(ast.right, c, StringType)
-            elif isinstance(right, StringType) and isinstance(left, NoneType):
-                setType(ast.left, c, StringType)
-            elif not isinstance(left, type(right)):
+        elif op in ['==.']:
+            if isinstance(left, NoneType):
+                if isinstance(ast.left, CallExpr):
+                    setType(ast.left.method, c, StringType)
+                else:
+                    setType(ast.left, c, StringType)
+                left = StringType()
+            if isinstance(right, NoneType):
+                if isinstance(ast.right, CallExpr):
+                    setType(ast.right.method, c, StringType)
+                else:
+                    setType(ast.right, c, StringType)
+                right = StringType()
+            if not isinstance(right, StringType) or not isinstance(left, NoneType):
+                raise TypeMismatchInExpression(ast)
+            return BoolType()
+
+        elif op in ['&&', '||']:
+            if isinstance(left, NoneType):
+                if isinstance(ast.left, CallExpr):
+                    setType(ast.left.method, c, BoolType)
+                else:
+                    setType(ast.left, c, BoolType)
+                left = BoolType()
+            if isinstance(right, NoneType):
+                if isinstance(ast.right, CallExpr):
+                    setType(ast.right.method, c, BoolType)
+                else:
+                    setType(ast.right, c, BoolType)
+                right = BoolType()
+            if not isinstance(right, BoolType) or not isinstance(left, NoneType):
+                raise TypeMismatchInExpression(ast)
+            return BoolType()
+
+        elif op in [ '+.']:
+            if isinstance(left, NoneType):
+                if isinstance(ast.left, CallExpr):
+                    setType(ast.left.method, c, StringType)
+                else:
+                    setType(ast.left, c, StringType)
+                left = StringType()
+            if isinstance(right, NoneType):
+                if isinstance(ast.right, CallExpr):
+                    setType(ast.right.method, c, StringType)
+                else:
+                    setType(ast.right, c, StringType)
+                right = StringType()
+            if not isinstance(right, StringType) or not isinstance(left, NoneType):
                 raise TypeMismatchInExpression(ast)
             return StringType()
 
@@ -353,17 +476,15 @@ class StaticChecker(BaseVisitor):
     # For access in Array
     # arr: Expr
     # idx: List[Expr]
-
     def visitArrayAccess(self, ast, c):
         arr = self.visit(ast.arr, c)
-        idx = [self.visit(ast.idx, c) for idx in ast.idx]
-
+        idx_lst =[ self.visit(elem, c) for elem in ast.idx]
+        
         if not isinstance(arr, ArrayType):
             raise TypeMismatchInExpression(ast)
-        for idx in idx:
-            if not isinstance(idx, IntType):
+        for idx in idx_lst:
+            if not isinstance(idx, NumberType):
                 raise TypeMismatchInExpression(ast)
-    # CHƯA BIẾT NÊN TRẢ RA CÁI GI =================================================================
         return arr
 
     # For access in JSON
@@ -371,15 +492,14 @@ class StaticChecker(BaseVisitor):
     # idx: List[Expr]
     def visitJSONAccess(self, ast, c):
         json = self.visit(ast.json, c)
-        idx = [self.visit(ast.idx, c) for idx in ast.idx]
-
-        if not isinstance(json, ArrayType):
+        idx_lst =[ self.visit(elem, c) for elem in ast.idx]
+        
+        if not isinstance(json, JSONType):
             raise TypeMismatchInExpression(ast)
-        for idx in idx:
-            if not isinstance(idx, NumberType):
+        for idx in idx_lst:
+            if not isinstance(idx, StringType):
                 raise TypeMismatchInExpression(ast)
-    # CHƯA BIẾT NÊN TRẢ RA CÁI GI =================================================================
-        return arr
+        return json
 
     # value: number
     def visitNumberLiteral(self, ast, c):
@@ -395,7 +515,7 @@ class StaticChecker(BaseVisitor):
 
     # value: List[Literal]
     def visitArrayLiteral(self, ast, c):
-        return ArrayType()
+        return ArrayType([x.value for x in ast.value], self.visit(ast.value[0], c))
 
     # value: List[tuple]
     def visitJSONLiteral(self, ast, c):

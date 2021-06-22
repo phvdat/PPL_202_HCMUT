@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(a)[VarDecl(Id(x),NoneType),VarDecl(Id(y),NoneType)],[])])
+Program([VarDecl(Id(x),NumberType),FuncDecl(Id(foo)[VarDecl(Id(a),[NumberLiteral(10.0)],NoneType)],[Assign(Id(b),NumberLiteral(100.0)),ConstDecl(Id($x),NumberType,NumberLiteral(10.0))])])

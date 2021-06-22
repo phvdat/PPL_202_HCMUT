@@ -1,1 +1,1 @@
-Program([FuncDecl(Id(main)[],[Assign(ArrayAccess(Id(a),[NumberLiteral(2.0)]),BinaryOp(+,CallExpr(Id(foo),[NumberLiteral(2.0)]),CallExpr(Id(foo),[CallExpr(Id(bar),[NumberLiteral(2.0),NumberLiteral(3.0)])])))])])
+Program([VarDecl(Id(x),NumberType,BinaryOp(*,BinaryOp(*,NumberLiteral(10.0),NumberLiteral(11.0)),NumberLiteral(12.0)))])

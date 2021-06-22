@@ -1,1 +1,5 @@
-Let x [4,6];
+
+                Let a[5]: Boolean = True;
+                Let b = 5;
+                Let c:Number;
+                
