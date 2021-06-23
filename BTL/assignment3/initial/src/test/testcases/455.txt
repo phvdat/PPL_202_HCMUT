@@ -1,0 +1,14 @@
+
+        Function main(){
+            Let a = {
+                add: "Sai Gon",
+                year: 2021
+            };
+            For key Of a {
+                Call(printSLn, [ key +. a{"key"}]);
+            }
+            Call(printSLn, [ key +. a{"key"}]);
+
+            Return 0;
+        }
+        

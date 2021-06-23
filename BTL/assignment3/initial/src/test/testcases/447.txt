@@ -1,0 +1,7 @@
+
+        Function main(){
+            Let x, y, z;
+            x = (x&&y) || ( False || (z ==. "any_string"));
+            z = x;
+        }
+        

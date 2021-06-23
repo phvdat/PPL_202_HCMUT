@@ -1,0 +1,6 @@
+
+        Function main(){
+            Let x, y, z;
+            z = ((x-3)>(-y)) && (!y);
+        }
+        

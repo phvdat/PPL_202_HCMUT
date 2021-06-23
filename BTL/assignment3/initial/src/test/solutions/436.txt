@@ -1,0 +1,1 @@
+Type Mismatch In Statement: ForOf(Id(i),Id(arr),[Assign(Id(a),BinaryOp(+,Id(a),NumberLiteral(1.0)))])

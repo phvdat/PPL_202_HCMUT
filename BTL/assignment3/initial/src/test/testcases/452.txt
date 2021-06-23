@@ -1,0 +1,8 @@
+
+        Function main(){
+            Let x, y, z:String;
+            x = (z +. "string") + y;
+            Let a:Number = x;
+            Return a+x;
+        }
+        

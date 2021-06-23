@@ -1,0 +1,10 @@
+
+        Function main(){
+            Let a;
+            Let arr:Number;
+            For i Of arr{
+                a = a + 1;
+            }
+            Return 0;
+        }
+        

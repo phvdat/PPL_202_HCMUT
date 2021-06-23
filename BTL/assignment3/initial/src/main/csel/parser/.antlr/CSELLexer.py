@@ -1,4 +1,4 @@
-# Generated from c:\Users\S540\Documents (2)\BK course\Ki_202\nguyen ly ngon ngu lap trinh\PPL_202_HCMUT\BTL\assignment3\initial\src\main\csel\parser\CSEL.g4 by ANTLR 4.8
+# Generated from c:\Users\S540\Documents (2)\assignment3\initial\src\main\csel\parser\CSEL.g4 by ANTLR 4.8
 from antlr4 import *
 from io import StringIO
 from typing.io import TextIO

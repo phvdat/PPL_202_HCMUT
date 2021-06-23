@@ -1,0 +1,9 @@
+
+        Function main(){
+            Let a= True;
+            Let b:Number;
+            Let c;
+            c = a && b;
+            Return c;
+        }
+        

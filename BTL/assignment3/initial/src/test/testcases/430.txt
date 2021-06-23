@@ -1,16 +1,12 @@
 
         Function main(){
-            Let a;
-            Let b;
-            if(a){
-                Let c= 100;
+            Let a:Boolean;
+            While(a){
+                Constant $c=10;
+                Break;
             }
-            elif(b){
-                Let d = 10;
-            }
-            else{
-                Constant $e = "Pham";
-            }
-            return 0;
+            Let x:String;
+            x = a;
+            Return 0;
         }
         

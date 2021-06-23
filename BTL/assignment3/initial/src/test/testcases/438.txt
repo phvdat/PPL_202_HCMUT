@@ -1,0 +1,12 @@
+
+        Function main(){
+            Let a;
+            Let json = {name: "Pham", age:21};
+            For i Of json{
+                a = a + 1;
+            }
+            Let b:Boolean;
+            b =  a;
+            Return 0;
+        }
+        

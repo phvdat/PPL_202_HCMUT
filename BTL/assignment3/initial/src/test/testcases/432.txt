@@ -1,0 +1,12 @@
+
+        Let a;
+        Function foo() {
+            Let a;
+            a = 100;
+            Return;
+        }        
+        Function main() {
+            a = "hcmut";
+            b =10;
+        }
+        

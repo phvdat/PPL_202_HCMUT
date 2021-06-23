@@ -1,5 +1,3 @@
-# Pham Van Dat
-# 1811892
 
 from CSELVisitor import CSELVisitor
 from CSELParser import CSELParser

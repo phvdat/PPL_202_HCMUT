@@ -1,0 +1,13 @@
+
+        Function main(){
+            Let a = {
+                name: "Yanxi Place",
+                address: "Chinese Forbidden City"
+            };
+            For key Of a {
+                Let temp = key +. "Sai Gon";
+            }
+            key = "Name";
+            Return 0;
+        }
+        

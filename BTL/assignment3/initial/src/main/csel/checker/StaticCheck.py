@@ -1,5 +1,5 @@
 # Pham Van Dat
-# 181192
+# 1811892
 from abc import ABC, abstractmethod, ABCMeta
 from dataclasses import dataclass
 from typing import List, Tuple
@@ -215,7 +215,8 @@ class StaticChecker(BaseVisitor):
     # param: List[VarDecl]
     # body: List[Inst]
     def visitFuncDecl(self, ast, c):
-        
+        # raise TypeMismatchInStatement(ast.body)
+    
         local_envi = []
         para_list = []
         return_typ = None
@@ -227,24 +228,20 @@ class StaticChecker(BaseVisitor):
                 para_list.append(param.variable.name)
                 local_envi.append(self.visit(param, local_envi))
         
-        rt_param_lst = local_envi
-        local_envi_c = local_envi + c
+        rt_param_lst = local_envi[:]
 
         for stmt in ast.body:    
             if isinstance(stmt, VarDecl):
-                local_envi_c.append(self.visit(stmt, local_envi))
                 local_envi.append(self.visit(stmt, local_envi))
                 
             elif isinstance(stmt, ConstDecl):
-                local_envi_c.append(self.visit(stmt, local_envi))
                 local_envi.append(self.visit(stmt, local_envi))
             else:
 
                 if isinstance(stmt, Return):
-                    return_typ = self.visit(stmt, local_envi_c)
+                    return_typ = self.visit(stmt, local_envi + c)
                 else:
-                    self.visit(stmt, local_envi_c)
-
+                    self.visit(stmt, local_envi + c)
         return [x.mtype.restype for x in rt_param_lst] , return_typ
 
         # temp=[i.name for i in local_envi]    # mảng các tên biến trong block
@@ -259,12 +256,21 @@ class StaticChecker(BaseVisitor):
     # rhs: Expr
     def visitAssign(self, ast, c):
 
+
         typ2=self.visit(ast.rhs,c)
         typ1=self.visit(ast.lhs,c)
         if type(typ1) is VoidType or type(typ2) is VoidType:
             raise TypeMismatchInStatement(ast)
-        if type(typ1) is ArrayType or type(typ1) is JSONType:
-            pass
+        if type(typ1) is Unknown:
+            if type(typ2) is NoneType:
+                raise TypeCannotBeInferred(ast)
+            else:
+                pass
+        elif type(typ2) is Unknown:
+            if type(typ1) is NoneType:
+                raise TypeMismatchInStatement(ast)
+            else:
+                pass
         else:
             if type(typ2) is NoneType and type(typ1) is NoneType:
                 raise TypeCannotBeInferred(ast)
@@ -274,24 +280,105 @@ class StaticChecker(BaseVisitor):
             if type(typ2) is NoneType:
                 setType(ast.rhs, c, type(typ1))
                 typ2 = typ1
-            if str(typ1) != str(typ2):
+
+            if type(typ1) is ArrayType and type(typ2) is not ArrayType :
+                raise TypeMismatchInStatement(ast)
+            elif type(typ2) is ArrayType and type(typ1) is not ArrayType :
+                raise TypeMismatchInStatement(ast)
+            elif type(typ1) is JSONType and type(typ2) is not JSONType :
+                raise TypeMismatchInStatement(ast)
+            elif type(typ2) is JSONType and type(typ1) is not JSONType :
+                raise TypeMismatchInStatement(ast)
+            elif type(typ2) is type(typ1):
+                pass
+
+            elif str(typ1) != str(typ2):
                 raise TypeMismatchInStatement(ast)
     # ifthenStmt: List[Tuple[Expr, List[Inst]]]
     # elseStmt: List[Inst]  # for Else branch, empty list if no Else
     def visitIf(self, ast, c):
-        local_envi = []
         ifthemStmt = ast.ifthenStmt
-        # for ifthen in ifthemStmt:
-            
+        for elem in ifthemStmt:
+            local_envi = []
+            exp = self.visit(elem[0], c)
+            if str(exp) != "BooleanType":
+                raise TypeMismatchInStatement(ast)
+
+            for stmt in elem[1]:    
+                if isinstance(stmt, VarDecl):
+                    local_envi.append(self.visit(stmt, local_envi))      
+                elif isinstance(stmt, ConstDecl):
+                    local_envi.append(self.visit(stmt, local_envi))
+                else:
+                    self.visit(stmt, local_envi + c)
+
+        elStmt = ast.elseStmt
+        if len(elStmt) !=0:
+            local_envi = []
+            for stmt in elStmt:    
+                if isinstance(stmt, VarDecl):
+                    local_envi.append(self.visit(stmt, local_envi))
+                elif isinstance(stmt, ConstDecl):
+                    local_envi.append(self.visit(stmt, local_envi))
+                else:
+                    self.visit(stmt, local_envi + c)
+
+
 
     # exp: Expr
     # sl: List[Inst]
-    def visitWhile(self, ast, c): pass
+    def visitWhile(self, ast, c):
+        local_envi = []
+        exp = self.visit(ast.exp, c)
+        if str(exp) != "BooleanType":
+            raise TypeMismatchInStatement(ast)
+
+        for stmt in ast.sl:    
+            if isinstance(stmt, VarDecl):
+                local_envi.append(self.visit(stmt, local_envi))
+                
+            elif isinstance(stmt, ConstDecl):
+                local_envi.append(self.visit(stmt, local_envi))
+            else:
+                self.visit(stmt, local_envi + c)
 
     # idx1: Id
     # expr: Expr
     # body: List[Inst]
-    def visitFor(self, ast, c): pass
+    def visitForIn(self, ast, c):
+        local_envi = [Symbol(str(ast.idx1.name), MType([], NoneType()))]
+
+        exp = self.visit(ast.expr, c)
+        if not isinstance(exp,ArrayType):
+            raise TypeMismatchInStatement(ast)
+
+        for stmt in ast.body:    
+            if isinstance(stmt, VarDecl):
+                local_envi.append(self.visit(stmt, local_envi))
+                
+            elif isinstance(stmt, ConstDecl):
+                local_envi.append(self.visit(stmt, local_envi))
+            else:
+                self.visit(stmt, local_envi + c)
+
+    # idx1: Id
+    # expr: Expr
+    # body: List[Inst]
+    def visitForOf(self, ast, c):
+        local_envi = [Symbol(str(ast.idx1.name), MType([], NoneType()))]
+
+        exp = self.visit(ast.expr, c)
+        if not isinstance(exp,JSONType):
+            raise TypeMismatchInStatement(ast)
+
+        for stmt in ast.body:    
+            if isinstance(stmt, VarDecl):
+                local_envi.append(self.visit(stmt, local_envi))
+                
+            elif isinstance(stmt, ConstDecl):
+                local_envi.append(self.visit(stmt, local_envi))
+            else:
+                self.visit(stmt, local_envi + c)
 
     def visitBreak(self, ast, c):pass
     def visitContinue(self, ast, c):pass
@@ -362,8 +449,15 @@ class StaticChecker(BaseVisitor):
         op = ast.op
         left = self.visit(ast.left, c)
         right = self.visit(ast.right, c)
+        if isinstance(left, Unknown) or isinstance(right, Unknown):
+            if op in ['+', '-', '*', '/', '%']:
+                return NumberType()
+            elif op in ['==', '!=', '<', '>', '<=', '>=', '==.', '&&', '||']:
+                return BoolType()
+            elif op in [ '+.']:
+                return StringType()
 
-        if op in ['+', '-', '*', '/', '%']:
+        elif op in ['+', '-', '*', '/', '%']:
             if isinstance(left, NoneType):
                 if isinstance(ast.left, CallExpr):
                     setType(ast.left.method, c, NumberType)
@@ -393,7 +487,7 @@ class StaticChecker(BaseVisitor):
                 else:
                     setType(ast.right, c, NumberType)
                 right = NumberType()
-            if not isinstance(right, NumberType) or not isinstance(left, NoneType):
+            if not isinstance(right, NumberType) or not isinstance(left, NumberType):
                 raise TypeMismatchInExpression(ast)
             return BoolType()
 
@@ -410,7 +504,7 @@ class StaticChecker(BaseVisitor):
                 else:
                     setType(ast.right, c, StringType)
                 right = StringType()
-            if not isinstance(right, StringType) or not isinstance(left, NoneType):
+            if not isinstance(right, StringType) or not isinstance(left, StringType):
                 raise TypeMismatchInExpression(ast)
             return BoolType()
 
@@ -427,7 +521,7 @@ class StaticChecker(BaseVisitor):
                 else:
                     setType(ast.right, c, BoolType)
                 right = BoolType()
-            if not isinstance(right, BoolType) or not isinstance(left, NoneType):
+            if not isinstance(right, BoolType) or not isinstance(left, BoolType):
                 raise TypeMismatchInExpression(ast)
             return BoolType()
 
@@ -444,7 +538,7 @@ class StaticChecker(BaseVisitor):
                 else:
                     setType(ast.right, c, StringType)
                 right = StringType()
-            if not isinstance(right, StringType) or not isinstance(left, NoneType):
+            if str(right) != "StringType" or str(left) != "StringType":
                 raise TypeMismatchInExpression(ast)
             return StringType()
 
@@ -485,7 +579,8 @@ class StaticChecker(BaseVisitor):
         for idx in idx_lst:
             if not isinstance(idx, NumberType):
                 raise TypeMismatchInExpression(ast)
-        return arr
+        return Unknown()
+        # return arr
 
     # For access in JSON
     # json: Expr
@@ -499,7 +594,8 @@ class StaticChecker(BaseVisitor):
         for idx in idx_lst:
             if not isinstance(idx, StringType):
                 raise TypeMismatchInExpression(ast)
-        return json
+        return Unknown()
+        # return json
 
     # value: number
     def visitNumberLiteral(self, ast, c):

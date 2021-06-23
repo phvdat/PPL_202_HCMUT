@@ -1,0 +1,1 @@
+Type Mismatch In Statement: Assign(Id(a),StringLiteral(hoa no khong mau))

@@ -1,0 +1,8 @@
+
+        Function main(){
+            Let a;
+            a= (a + 3.4) * (a -2);
+            b = a;
+            Return b;
+        }
+        

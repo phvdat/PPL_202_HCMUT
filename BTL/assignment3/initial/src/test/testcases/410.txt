@@ -1,7 +1,7 @@
 
         Function main(){
-            Let a[1.0,3.0]:String;
-            a[2] = 10.0;
-            a = [];
+            Let a:String = "Pham";
+            Let b:Number;
+            b = a +. "Dat";
         }
         

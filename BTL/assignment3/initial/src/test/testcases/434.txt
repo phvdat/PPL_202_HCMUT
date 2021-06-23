@@ -1,0 +1,11 @@
+
+        Function main(){
+            Let a;
+            Let arr[5];
+            For i In arr{
+                a = a + 1;
+            }
+            a = "hoa no khong mau";
+            Return 0;
+        }
+        

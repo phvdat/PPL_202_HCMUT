@@ -1,0 +1,14 @@
+
+        Function main(){
+            Let a;
+            While(1 < 2){
+                Let a;
+                Constant $z = 10;
+                a = "hcmut";
+                Break;
+            }
+            a = 100;
+            b = "Pham";
+            Return 0;
+        }
+        

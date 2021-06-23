@@ -1,0 +1,7 @@
+
+        Function main(){
+            Let x, y, z:String;
+            x = y || 10;
+            Return x;
+        }
+        

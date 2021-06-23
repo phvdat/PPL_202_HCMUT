@@ -1,5 +1,0 @@
-
-        Function main() {
-            Call(printStrLn, [Call(read, [4])]);
-        }
-        

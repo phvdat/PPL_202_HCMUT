@@ -1,3 +1,5 @@
+# Pham Van Dat
+# 1811892
 import unittest
 from TestUtils import TestChecker
 from StaticError import *
@@ -111,17 +113,17 @@ class CheckSuite(unittest.TestCase):
         expect = "Undeclared Identifier: a"
         self.assertTrue(TestChecker.test(input,expect,409))
 
-    # def test_id_undeclared3(self):
-    #     """ Undeclared Identifier """
-    #     input = """
-    #     Function main(){
-    #         Let a[1.0,3.0]:String;
-    #         a[2] = 10.0;
-    #         a = [];
-    #     }
-    #     """
-    #     expect = "Type Mismatch In Statement: Assign(Id(a),NumberLiteral(10.0))"
-    #     self.assertTrue(TestChecker.test(input,expect,410))
+    def test_id_undeclared3(self):
+        """ Undeclared Identifier """
+        input = """
+        Function main(){
+            Let a:String = "Pham";
+            Let b:Number;
+            b = a +. "Dat";
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(b),BinaryOp(+.,Id(a),StringLiteral(Dat)))"
+        self.assertTrue(TestChecker.test(input,expect,410))
 
     def test_func_undeclared1(self):
         """ Undeclared Function 411"""
@@ -368,29 +370,490 @@ class CheckSuite(unittest.TestCase):
         self.assertTrue(TestChecker.test(input,expect,429))
 
  
-
-    def test_ifstatement1(self):
+    def test_while_statemnt1(self):
         """ Test 430 """
         input = """
         Function main(){
-            Let a;
-            Let b;
-            if(a){
-                Let c= 100;
-            }
-            elif(b){
-                Let d = 10;
-            }
-            else{
-                Constant $e = "Pham";
+            Let a:Boolean;
+            While(a){
+                Constant $c=10;
+                Break;
             }
             Let x:String;
-            x = a
-            return 0;
+            x = a;
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(x),Id(a))"
+        self.assertTrue(TestChecker.test(input,expect,430))
+
+    def test_while_statemnt2(self):
+        """ Test 431 """
+        input = """
+        Function main(){
+            Let a;
+            While(1 < 2){
+                a = "hcmut";
+                Break;
+            }
+            a = 100;
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(a),NumberLiteral(100.0))"
+        self.assertTrue(TestChecker.test(input,expect,431))
+
+    def test_while_statemnt3(self):
+        """ Test 432 """
+        input = """
+        Let a;
+        Function foo() {
+            Let a;
+            a = 100;
+            Return;
+        }        
+        Function main() {
+            a = "hcmut";
+            b =10;
         }
         """
         expect = "Undeclared Identifier: b"
-        self.assertTrue(TestChecker.test(input,expect,430))
+        self.assertTrue(TestChecker.test(input,expect,432))
+
+    def test_while_statement4(self):
+        """ Test 433 """
+        input = """
+        Function main(){
+            Let a;
+            While(1 < 2){
+                Let a;
+                Constant $z = 10;
+                a = "hcmut";
+                Break;
+            }
+            a = 100;
+            b = "Pham";
+            Return 0;
+        }
+        """
+        expect = "Undeclared Identifier: b"
+        self.assertTrue(TestChecker.test(input,expect,433))
+
+    def test_for_statement1(self):
+        """ Test 434 """
+        input = """
+        Function main(){
+            Let a;
+            Let arr[5];
+            For i In arr{
+                a = a + 1;
+            }
+            a = "hoa no khong mau";
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(a),StringLiteral(hoa no khong mau))"
+        self.assertTrue(TestChecker.test(input,expect,434))
+
+    def test_for_statement2(self):
+        """ Test 435 """
+        input = """
+        Function main(){
+            Let a;
+            Let arr:Number;
+            For i In arr{
+                a = a + 1;
+            }
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: ForIn(Id(i),Id(arr),[Assign(Id(a),BinaryOp(+,Id(a),NumberLiteral(1.0)))])"
+        self.assertTrue(TestChecker.test(input,expect,435))
+
+    def test_for_statement3(self):
+        """ Test 436 """
+        input = """
+        Function main(){
+            Let a;
+            Let arr:Number;
+            For i Of arr{
+                a = a + 1;
+            }
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: ForOf(Id(i),Id(arr),[Assign(Id(a),BinaryOp(+,Id(a),NumberLiteral(1.0)))])"
+        self.assertTrue(TestChecker.test(input,expect,436))
+    
+    def test_for_statement4(self):
+        """ Test 435 """
+        input = """
+        Function main(){
+            Let a;
+            Let json[];
+            For i Of json{
+                a = a + 1;
+            }
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: ForOf(Id(i),Id(json),[Assign(Id(a),BinaryOp(+,Id(a),NumberLiteral(1.0)))])"
+        self.assertTrue(TestChecker.test(input,expect,437))
+
+    def test_for_statement5(self):
+        """ Test 438 """
+        input = """
+        Function main(){
+            Let a;
+            Let json = {name: "Pham", age:21};
+            For i Of json{
+                a = a + 1;
+            }
+            Let b:Boolean;
+            b =  a;
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(b),Id(a))"
+        self.assertTrue(TestChecker.test(input,expect,438))
+
+    def test_for_statement6(self):
+        """ Test 438 """
+        input = """
+        Function main(){
+            Let a;
+            For i Of {name: "Pham", age:21}{
+                a = a + 1;
+            }
+            Let b:Boolean;
+            b =  a;
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(b),Id(a))"
+        self.assertTrue(TestChecker.test(input,expect,439))
+
+    def test_for_statement7(self):
+        """ Test 441 """
+        input = """
+        Function main(){
+            Let a;
+            For i In [1,2,3,4]{
+                a = a + i;
+            }
+            a = "a walk to remember";
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(a),StringLiteral(a walk to remember))"
+        self.assertTrue(TestChecker.test(input,expect,440))
+
+    def test_for_statement8(self):
+        """ Test 441 """
+        input = """
+        Function main(){
+            Let a = {
+                name: "Yanxi Place",
+                address: "Chinese Forbidden City"
+            };
+            For key Of a {
+                key = 10;
+            }
+            key = "Name";
+            Return 0;
+        }
+        """
+        expect = "Undeclared Identifier: key"
+        self.assertTrue(TestChecker.test(input,expect,441))
+
+    def test_442(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let a= True;
+            Let b:Number;
+            Let c;
+            c = a && b;
+            Return c;
+        }
+        """
+        expect = "Type Mismatch In Expression: BinaryOp(&&,Id(a),Id(b))"
+        self.assertTrue(TestChecker.test(input,expect,442))
+
+    def test_443(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let a;
+            a= 3+ True;
+        }
+        """
+        expect = "Type Mismatch In Expression: BinaryOp(+,NumberLiteral(3.0),BooleanLiteral(true))"
+        self.assertTrue(TestChecker.test(input,expect,443))
+
+    def test_444(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let a;
+            a= (a + 3.4) * (a -2);
+            b = a;
+            Return b;
+        }
+        """
+        expect = "Undeclared Identifier: b"
+        self.assertTrue(TestChecker.test(input,expect,444))
+
+    def test_445(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let x, y, z;
+            z = ((x-3)>(-y)) && (!y);
+        }
+        """
+        expect = "Type Mismatch In Expression: UnaryOp(-,Id(y))"
+        self.assertTrue(TestChecker.test(input,expect,445))
+    
+    def test_446(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let x, y, z;
+            z = ((x-3)>(-y)) && (!y);
+        }
+        """
+        expect = "Type Mismatch In Expression: UnaryOp(-,Id(y))"
+        self.assertTrue(TestChecker.test(input,expect,446))
+
+    def test_447(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let x, y, z;
+            x = (x&&y) || ( False || (z ==. "any_string"));
+            z = x;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(z),Id(x))"
+        self.assertTrue(TestChecker.test(input,expect,447))
+
+    
+    def test_448(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let x, y, z:String;
+            x = y + z + 10;
+            Return x;
+        }
+        """
+        expect = "Type Mismatch In Expression: BinaryOp(+,Id(y),Id(z))"
+        self.assertTrue(TestChecker.test(input,expect,448))
+
+        
+    def test_449(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let x, y, z:String;
+            x = y || 10;
+            Return x;
+        }
+        """
+        expect = "Type Mismatch In Expression: BinaryOp(||,Id(y),NumberLiteral(10.0))"
+        self.assertTrue(TestChecker.test(input,expect,449))
+
+    def test_450(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let x, y, z:String;
+            x = y || z;
+            Return x;
+        }
+        """
+        expect = "Type Mismatch In Expression: BinaryOp(||,Id(y),Id(z))"
+        self.assertTrue(TestChecker.test(input,expect,450))    
+
+    def test_451(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let x, y, z:String;
+            x = y +. z;
+            Let a:Number = x;
+            Return a;
+        }
+        """
+        expect = "Type Mismatch In Statement: VarDecl(Id(a),NumberType,Id(x))"
+        self.assertTrue(TestChecker.test(input,expect,451))
+
+    def test_452(self):
+        """ Test """
+        input = """
+        Function main(){
+            Let x, y, z:String;
+            x = (z +. "string") + y;
+            Let a:Number = x;
+            Return a+x;
+        }
+        """
+        expect = "Type Mismatch In Expression: BinaryOp(+,BinaryOp(+.,Id(z),StringLiteral(string)),Id(y))"
+        self.assertTrue(TestChecker.test(input,expect,452))
+
+    def test_for_statement8(self):
+        """ Test 453 """
+        input = """
+        Function main(){
+            Let a = {
+                name: "Yanxi Place",
+                address: "Chinese Forbidden City"
+            };
+            For key Of a {
+                Let temp = key +. "Sai Gon";
+            }
+            key = "Name";
+            Return 0;
+        }
+        """
+        expect = "Undeclared Identifier: key"
+        self.assertTrue(TestChecker.test(input,expect,453))
+
+    def test_for_in(self):
+        """ Test 454 """
+        input = """
+        Function main(){
+            For i In [1, 2, 3] {
+                Call(printSLn, [i]);
+            }
+            Call(printSLn, [i]);
+            Return 0;
+        }
+        """
+        expect = "Undeclared Identifier: i"
+        self.assertTrue(TestChecker.test(input,expect,454))
+
+
+    def test_for_of(self):
+        """ Test 455 """
+        input = """
+        Function main(){
+            Let a = {
+                add: "Sai Gon",
+                year: 2021
+            };
+            For key Of a {
+                Call(printSLn, [ key +. a{"key"}]);
+            }
+            Call(printSLn, [ key +. a{"key"}]);
+
+            Return 0;
+        }
+        """
+        expect = "Undeclared Identifier: key"
+        self.assertTrue(TestChecker.test(input,expect,455))
+
+
+
+
+
+
+
+
+
+
+    def test_infer(self):
+        """ Test 60 """
+        input = """
+        Function main(){
+            Let a =[1, 2, 3, 4, 5];
+            Let b = {name: "Pham", age:21};
+            a = b;
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(a),Id(b))"
+        self.assertTrue(TestChecker.test(input,expect,460))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # def test_while_statemnt2(self):
+    #     """ Test 430 """
+    #     input = """
+    #     Function foo(a[5], b) {
+    #         Let i = 0;
+    #         While (i < 5) {
+    #             a[i] = b + 1;
+    #             Let u: Number = i + 1;
+    #             If (a[u] == 10) {
+    #                 Return a[i];
+    #             }
+    #         }
+    #         Return -1;
+    #     }
+    #     """
+    #     expect = "Undeclared Identifier: b"
+    #     self.assertTrue(TestChecker.test(input,expect,431))
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # def test_ifstatement10(self):
+    #     """ Test 430 """
+    #     input = """
+    #     Function main(){
+    #         Let a;
+    #         Let b;
+    #         if(a){
+    #             Let c= 100;
+    #         }
+    #         elif(b){
+    #             Let d = 10;
+    #         }
+    #         else{
+    #             Constant $e = "Pham";
+    #         }
+    #         Let x:String;
+    #         x = a
+    #         return 0;
+    #     }
+    #     """
+    #     expect = "Undeclared Identifier: b"
+    #     self.assertTrue(TestChecker.test(input,expect,430))
 
 
 

@@ -1,0 +1,10 @@
+
+        Function main(){
+            Let a;
+            For i In [1,2,3,4]{
+                a = a + i;
+            }
+            a = "a walk to remember";
+            Return 0;
+        }
+        

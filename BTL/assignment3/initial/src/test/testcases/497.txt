@@ -1,4 +1,0 @@
-Function main() {
-            Call(printStrLn, [Call(read, [10])]);
-        }
-        
