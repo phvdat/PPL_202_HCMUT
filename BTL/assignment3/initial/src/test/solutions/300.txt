@@ -1,0 +1,1 @@
+Program([VarDecl(Id(x),NoneType),VarDecl(Id(y),NoneType),VarDecl(Id(z),NumberType),ConstDecl(Id($x),NoneType,NumberLiteral(2.0)),FuncDecl(Id(foo)[VarDecl(Id(a),NoneType)],[]),FuncDecl(Id(foo1)[VarDecl(Id(a),NoneType)],[]),FuncDecl(Id(main)[],[If(CallExpr(Id(foo),[Id(z)]),[])ElseIf(Id(x),[])Else([If(CallExpr(Id(foo1),[Id(x)]),[])])])])

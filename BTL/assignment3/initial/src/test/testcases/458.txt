@@ -1,0 +1,18 @@
+
+        Function main(){
+            Let a:Boolean;
+            Let b:Boolean;
+            If(a){
+                Let c= 100;
+            }
+            Elif(b){
+                Let d = 10;
+            }
+            Else{
+                Constant $e = "Pham";
+            }
+            Let x:String;
+            x = a;
+            return 0;
+        }
+        

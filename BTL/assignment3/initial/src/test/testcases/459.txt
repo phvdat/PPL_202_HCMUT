@@ -1,0 +1,9 @@
+
+        Function main(){
+            Let a:Number;
+            If(a){
+                Let c= 100;
+            }
+            return 0;
+        }
+        

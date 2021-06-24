@@ -1,0 +1,9 @@
+
+        Function main(a[5], b) {
+            Let i = 0;
+            Let u: Number = 1;
+            If (a[u] == 10) {
+                Return a[i];
+            }
+        }
+        

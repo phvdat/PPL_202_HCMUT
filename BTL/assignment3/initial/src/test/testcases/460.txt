@@ -1,8 +1,13 @@
 
-        Function main(){
-            Let a =[1, 2, 3, 4, 5];
-            Let b = {name: "Pham", age:21};
-            a = b;
-            Return 0;
+        Function main(a[5], b) {
+            Let i = 0;
+            While (i < 5) {
+                a[i] = b + 1;
+                Let u: Number = 1;
+                If (a[u] == 10) {
+                    Return a[i];
+                }
+            }
+            Return u;
         }
         

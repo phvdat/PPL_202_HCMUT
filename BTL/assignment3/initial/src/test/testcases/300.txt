@@ -1,11 +1,4 @@
-import unittest
-from TestUtils import TestAST
-from AST import *
 
-class ASTGenSuite(unittest.TestCase):
-    def test_simple_program(self):
-        """Simple program: int main() {} """
-        input = """
         Let x, y, z:Number;
         Constant $x=2;
         Function foo(a){
@@ -23,10 +16,4 @@ class ASTGenSuite(unittest.TestCase):
                 }
             }
         }
-        """
-        expect = ""
-        self.assertTrue(TestAST.checkASTGen(input,expect,300))
-
-    
-   
         

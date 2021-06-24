@@ -150,16 +150,21 @@ class ASTGeneration(CSELVisitor):
         
     #if
     def visitIf_stmt(self, ctx: CSELParser.If_stmtContext):
+        if ctx.statementsList():
+            stmtIf = self.visit(ctx.statementsList())
+        else:
+            stmtIf = []
         if ctx.else_func():
             if ctx.elseif_list():
-                return If([(self.visit(ctx.exp()), self.visit(ctx.statementsList()))] + self.visit(ctx.elseif_list()),self.visit(ctx.else_func()) )
+                print(self.visit(ctx.exp()))
+                return If([(self.visit(ctx.exp()), stmtIf)] + self.visit(ctx.elseif_list()),self.visit(ctx.else_func()))
             else:
-                return If([(self.visit(ctx.exp()), self.visit(ctx.statementsList()))], self.visit(ctx.else_func()))
+                return If([(self.visit(ctx.exp()), stmtIf)], self.visit(ctx.else_func()))
         else:
             if ctx.elseif_list():
-                return If([(self.visit(ctx.exp()), self.visit(ctx.statementsList()))] + self.visit(ctx.elseif_list()),[])
+                return If([(self.visit(ctx.exp()), stmtIf)] + self.visit(ctx.elseif_list()),[])
             else:
-                return If([(self.visit(ctx.exp()), self.visit(ctx.statementsList()))] ,[])
+                return If([(self.visit(ctx.exp()), stmtIf)] ,[])
         
 
     
@@ -167,8 +172,11 @@ class ASTGeneration(CSELVisitor):
         return [self.visit(x) for x in ctx.elseif_func()] if ctx.elseif_func() else []
     
     def visitElseif_func(self, ctx: CSELParser.Elseif_funcContext):
-        return (self.visit(ctx.exp()), self.visit(ctx.statementsList()))
-    
+        if ctx.statementsList():
+            return (self.visit(ctx.exp()), self.visit(ctx.statementsList()))
+        else:
+            return (self.visit(ctx.exp()),[])
+
     def visitElse_func(self, ctx: CSELParser.Else_funcContext):
         if ctx.statementsList():
             return self.visit(ctx.statementsList())

@@ -1,0 +1,14 @@
+
+        Let x[5,2], y, z:Boolean;
+        Function foo(x){
+            If(x){
+                Return z;
+            }
+            Return x;
+        }
+        Function foo1(a[]){
+        }
+        Function main() {
+            y=x[5,2];
+        }
+        

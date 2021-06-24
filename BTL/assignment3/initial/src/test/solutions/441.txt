@@ -1,1 +1,1 @@
-Undeclared Identifier: key
+Type Mismatch In Statement: ForIn(Id(x),Id(y),[VarDecl(Id(y),NoneType),ForIn(Id(z),Id(y),[])])

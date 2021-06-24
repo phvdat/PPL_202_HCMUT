@@ -612,7 +612,7 @@ class CheckSuite(unittest.TestCase):
             z = ((x-3)>(-y)) && (!y);
         }
         """
-        expect = "Type Mismatch In Expression: UnaryOp(-,Id(y))"
+        expect = "Type Mismatch In Expression: UnaryOp(!,Id(y))"
         self.assertTrue(TestChecker.test(input,expect,445))
     
     def test_446(self):
@@ -623,7 +623,7 @@ class CheckSuite(unittest.TestCase):
             z = ((x-3)>(-y)) && (!y);
         }
         """
-        expect = "Type Mismatch In Expression: UnaryOp(-,Id(y))"
+        expect = "Type Mismatch In Expression: UnaryOp(!,Id(y))"
         self.assertTrue(TestChecker.test(input,expect,446))
 
     def test_447(self):
@@ -754,17 +754,8 @@ class CheckSuite(unittest.TestCase):
         expect = "Undeclared Identifier: key"
         self.assertTrue(TestChecker.test(input,expect,455))
 
-
-
-
-
-
-
-
-
-
-    def test_infer(self):
-        """ Test 60 """
+    def test_456(self):
+        """ Test 56 """
         input = """
         Function main(){
             Let a =[1, 2, 3, 4, 5];
@@ -774,122 +765,81 @@ class CheckSuite(unittest.TestCase):
         }
         """
         expect = "Type Mismatch In Statement: Assign(Id(a),Id(b))"
+        self.assertTrue(TestChecker.test(input,expect,456))
+
+    def test_if457(self):
+        """ Test 57 """
+        input = """
+        Function main(){
+            Let a:Boolean;
+            If(a){
+                Call(printSLn, ["Back khoa"]);
+            }
+            Elif(!a){
+                Call(printSLn, ["Kinh Te"]);
+            }
+            Else{
+                Return b;
+            }
+        }
+        """
+        expect = "Undeclared Identifier: b"
+        self.assertTrue(TestChecker.test(input,expect,457))
+
+    def test_ifstatement458(self):
+        """ Test 430 """
+        input = """
+        Function main(){
+            Let a:Boolean;
+            Let b:Boolean;
+            If(a){
+                Let c= 100;
+            }
+            Elif(b){
+                Let d = 10;
+            }
+            Else{
+                Constant $e = "Pham";
+            }
+            Let x:String;
+            x = a;
+            return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(x),Id(a))"
+        self.assertTrue(TestChecker.test(input,expect,458))
+        
+    def test_ifstatement459(self):
+        """ Test 430 """
+        input = """
+        Function main(){
+            Let a:Number;
+            If(a){
+                Let c= 100;
+            }
+            return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: If(Id(a),[VarDecl(Id(c),NoneType,NumberLiteral(100.0))])"
+        self.assertTrue(TestChecker.test(input,expect,459))
+
+    def test_while_if(self):
+        """ Test 460 """
+        input = """
+        Function main(a[5], b) {
+            Let i = 0;
+            While (i < 5) {
+                a[i] = b + 1;
+                Let u: Number = 1;
+                If (a[u] == 10) {
+                    Return a[i];
+                }
+            }
+            Return u;
+        }
+        """
+        expect = "Undeclared Identifier: u"
         self.assertTrue(TestChecker.test(input,expect,460))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # def test_while_statemnt2(self):
-    #     """ Test 430 """
-    #     input = """
-    #     Function foo(a[5], b) {
-    #         Let i = 0;
-    #         While (i < 5) {
-    #             a[i] = b + 1;
-    #             Let u: Number = i + 1;
-    #             If (a[u] == 10) {
-    #                 Return a[i];
-    #             }
-    #         }
-    #         Return -1;
-    #     }
-    #     """
-    #     expect = "Undeclared Identifier: b"
-    #     self.assertTrue(TestChecker.test(input,expect,431))
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # def test_ifstatement10(self):
-    #     """ Test 430 """
-    #     input = """
-    #     Function main(){
-    #         Let a;
-    #         Let b;
-    #         if(a){
-    #             Let c= 100;
-    #         }
-    #         elif(b){
-    #             Let d = 10;
-    #         }
-    #         else{
-    #             Constant $e = "Pham";
-    #         }
-    #         Let x:String;
-    #         x = a
-    #         return 0;
-    #     }
-    #     """
-    #     expect = "Undeclared Identifier: b"
-    #     self.assertTrue(TestChecker.test(input,expect,430))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     # test case của thầy
@@ -946,3 +896,4 @@ class CheckSuite(unittest.TestCase):
     #             CallStmt(Id("printStrLn"), [])]))])
     #     expect = str(TypeMismatchInStatement(CallStmt(Id("printStrLn"), [])))
     #     self.assertTrue(TestChecker.test(input, expect, 500))
+

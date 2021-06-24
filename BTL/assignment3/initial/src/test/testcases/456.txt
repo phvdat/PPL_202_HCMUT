@@ -1,0 +1,8 @@
+
+        Function main(){
+            Let a =[1, 2, 3, 4, 5];
+            Let b = {name: "Pham", age:21};
+            a = b;
+            Return 0;
+        }
+        
