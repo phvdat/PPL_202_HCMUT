@@ -1,16 +1,19 @@
 
-        Let x:Number, y:Boolean, z:String,t:JSON;
-        Function foo(x){
-            If(x){
-                Return True;
+        Let a = {name: "Pham", age:21};
+        Function foo(){
+            Return a;
+        }
+        Function main(a[5], i) {
+            Let x;
+            While (i < 5) {
+                x = "HCMUT";
+                For j In Call(foo, []){
+                    Let a = x;
+                    Let j;
+
+                }
             }
-            Return x;
-        }
-        Function foo1(a[]){
-        }
-        Function main() {
-            Let a;
-            a=x+x;
-            a=x-y;
+            x = "Pham VD";
+            Return u;
         }
         

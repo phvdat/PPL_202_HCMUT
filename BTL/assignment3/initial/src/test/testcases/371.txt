@@ -1,0 +1,17 @@
+
+        Let x[5], y, z:Number;
+        Constant $x=2;
+        Function foo(a){
+            Return;
+        }
+        Function foo1(a){
+            Return;
+        }
+        Function main() {
+            For x Of y{
+                 While(Call(foo,[x])){
+                     
+                     }
+            }
+        }
+        

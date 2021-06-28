@@ -1,0 +1,19 @@
+
+        Let a;
+        Function main() {
+            Let a;
+            For i In [1,2,3,4]{
+                Let b;
+                If(True){
+                    Constant $c = 10;
+                    While(True){
+                        Let a;
+                        a = 10;
+                    }
+                }
+                b = 100;
+                a = b;
+            }
+            a = "hcmut";
+        }
+        

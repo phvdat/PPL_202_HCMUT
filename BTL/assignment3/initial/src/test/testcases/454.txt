@@ -1,9 +1,9 @@
 
         Function main(){
-            For i In [1, 2, 3] {
-                Call(printSLn, [i]);
+            For i In ["1", "2", "3"] {
+                Call(printLn, [i]);
             }
-            Call(printSLn, [i]);
+            Call(printLn, [i]);
             Return 0;
         }
         

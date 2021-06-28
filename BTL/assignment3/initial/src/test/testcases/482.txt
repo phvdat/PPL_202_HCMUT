@@ -1,0 +1,15 @@
+
+        Let a = {name: "Pham", age:21};
+        Function foo(){
+            Return True;
+        }
+        Function main(arr[5], i) {
+            If(Call(foo, [])){
+                Let a = True;
+                If(a){
+                    a = 100;
+                }
+            }
+            Return u;
+        }
+        

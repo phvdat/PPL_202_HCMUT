@@ -1,6 +1,6 @@
 
         Function foo(){
-            Call(printSLn, ["Pham Van Dat"]);
+            Call(printLn, ["Pham Van Dat"]);
             Return;
         }
         Function main() {

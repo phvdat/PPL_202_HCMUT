@@ -1,0 +1,8 @@
+
+        Let x;
+        Let y;
+        Constant $x:Number=2.0;
+        Constant $x:Number=5.0;
+        Function main() {
+        }
+        

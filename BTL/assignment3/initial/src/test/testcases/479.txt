@@ -1,0 +1,17 @@
+
+            Let x = 10.0;
+            Function factorial(n)
+            {
+                If (n <= 1) {
+                 Return n*Call(factorial,[n-1]);
+                }
+                Else {
+                Return 1;
+                } 
+                
+            }
+            Function main()
+            {
+                Return Call(factorial,[]);
+            }
+        

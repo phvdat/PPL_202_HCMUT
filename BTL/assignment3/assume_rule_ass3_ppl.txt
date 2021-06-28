@@ -1,0 +1,27 @@
+1. Redeclared(<kind>,<identifier>) : <kind> is the kind of the <identifier> (Variable/Constant/Function/Parameter)
+
+2. Undeclared(<kind>,<identifier>) : The identifier can be a Variable or Parameter or Function
+
+3. TypeCannotBeInferred(<statement>): 
+	Biến phải suy ra trong lần đầy dc sử dụng, và không được thay đổi 
+	y = a + Call(foo, [x]) can be inferred to type y, a and the return type of foo() But we cannot infer the type of x,=> raised with the assignment statement
+	A call statement :  gọi 1 hàm chưa giải quyết kiểu khi tất cả tham số được infer thì se thành VoidType(), nhưng nếu 1 ts chưa dc giải quyết thì raise
+	A  function call: hợp lệ nếu tất cả các kiểu tham số của nó và kiểu trả về có thể được giải quyết
+	Assign:  hai bên không thể được giải quyết các loại của họ, raise
+	for each statement: tất cả biến xuất hiện phải được giải quyết, nếu không raise lỗi với stmt gần nhất
+
+4. Type Mismatch In Statement
+	Kiểu của biểu thức điều kiện trong câu lệnh if phải là kiểu boolean:						IF( BOOLEAN )
+	The type of json in For/Of and array in For/In statement must be JSON Type or Array Type, respectively.
+	Kiểu của biến chỉ số, biểu thức 1 và biểu thức 3 trong câu lệnh for phải là số trong khi kiểu biểu thức 2 là boolean. 	FOR(INT I, I< 10, I++)
+	Biểu thức điều kiện trong câu lệnh do while và while phải là kiểu boolean.					WHILE( BOOLEAN )
+	(LHS) có thể thuộc bất kỳ kiểu nào ngoại trừ VoidType.(RHS) là cùng loại với LHS
+	call statement Call(<method name>, [<args>]): phải có VoidType làm kiểu trả về, Số lượng đối số == số lượng tham số. Ngoài ra, kiểu của mỗi đối số == tham số tương ứng
+	Return: nếu kiểu trả về của hàm kèm theo là VoidType, thì biểu thức trong câu lệnh trả về phải trống. Nếu không, kiểu của biểu thức trả về phải giống với kiểu trả về của hàm.
+5. Type Mismatch In Expression
+	array indexing E[E1]...[En]: 	 E must be in array type with n dimensions and E1...En must be number
+	binary, unary
+	For a function call Call(<function name>, [<args>]):  số lượng các tham số thực tế phải giống với số lượng các tham số chính thức của hàm tương ứng. Kiểu của mỗi đối số phải giống với kiểu của tham số tương ứng. 
+	
+NoEntryPoint(): Phải có 1 hàm tên main
+

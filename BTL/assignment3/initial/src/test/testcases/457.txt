@@ -1,11 +1,11 @@
 
         Function main(){
             Let a:Boolean;
-            If(a){
-                Call(printSLn, ["Back khoa"]);
+            If(True){
+                Call(printLn, ["Back khoa"]);
             }
             Elif(!a){
-                Call(printSLn, ["Kinh Te"]);
+                Call(printLn, ["Kinh Te"]);
             }
             Else{
                 Return b;

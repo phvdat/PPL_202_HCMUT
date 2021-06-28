@@ -1,9 +1,11 @@
 
-        Function main(a[5], b) {
-            Let i = 0;
-            Let u: Number = 1;
-            If (a[u] == 10) {
-                Return a[i];
+        Let x:Number;
+        Function main(a[5], i) {
+            Let x;
+            While (i < 5) {
+                x = "HCMUT";
             }
+            x = "Pham VD";
+            Return u;
         }
         

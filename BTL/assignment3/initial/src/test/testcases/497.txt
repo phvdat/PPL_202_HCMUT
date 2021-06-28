@@ -1,0 +1,4 @@
+Function main() {
+            Call(printLn, [Call(read, [10])]);
+        }
+        

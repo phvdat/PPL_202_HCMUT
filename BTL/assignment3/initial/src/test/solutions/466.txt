@@ -1,1 +1,1 @@
-Type Mismatch In Statement: If(Id(x),[Return(BooleanLiteral(true))])
+Type Cannot Be Inferred: BinaryOp(+,Id(a),CallExpr(Id(foo),[Id(x)]))

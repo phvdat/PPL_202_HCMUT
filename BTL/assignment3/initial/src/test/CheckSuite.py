@@ -7,8 +7,7 @@ from AST import *
 
 
 class CheckSuite(unittest.TestCase):
-
-    def test_no_entry_point1(self):
+    def test_no_entry_point(self):
         """ No Entry Point """
         input = """
         Function main1(){
@@ -190,7 +189,7 @@ class CheckSuite(unittest.TestCase):
         input = """
         Function main(){
             Let a[2, 3];
-            a[1] = 10;
+            a[1] = [1,2,3,4,5];
             b = 100;
         }
         """
@@ -236,7 +235,7 @@ class CheckSuite(unittest.TestCase):
         """Simple program: main 420"""
         input = """
         Function foo(){
-            Call(printSLn, ["Pham Van Dat"]);
+            Call(printLn, ["Pham Van Dat"]);
             Return;
         }
         Function main() {
@@ -252,7 +251,7 @@ class CheckSuite(unittest.TestCase):
     def test_diff_numofparam_stmt1(self):
         """Complex program 421"""
         input = """Function main() {
-            Call(printSLn, ["HCMUT"]);
+            Call(printLn, ["HCMUT"]);
             a = 10;
         }"""
         expect = str(Undeclared(Identifier(), "a"))
@@ -261,10 +260,10 @@ class CheckSuite(unittest.TestCase):
     def test_diff_numofparam_stmt2(self):
         """Complex program 422"""
         input = """Function main() {
-            Call(printSLn, [5]);
+            Call(printLn, [5]);
             Let a = 10;
         }"""
-        expect = "Type Mismatch In Statement: CallStmt(Id(printSLn),[NumberLiteral(5.0)])"
+        expect = "Type Mismatch In Statement: CallStmt(Id(printLn),[NumberLiteral(5.0)])"
         self.assertTrue(TestChecker.test(input, expect, 422))
 
     def test_423(self):
@@ -534,7 +533,7 @@ class CheckSuite(unittest.TestCase):
         self.assertTrue(TestChecker.test(input,expect,439))
 
     def test_for_statement7(self):
-        """ Test 441 """
+        """ Test 440 """
         input = """
         Function main(){
             Let a;
@@ -548,7 +547,7 @@ class CheckSuite(unittest.TestCase):
         expect = "Type Mismatch In Statement: Assign(Id(a),StringLiteral(a walk to remember))"
         self.assertTrue(TestChecker.test(input,expect,440))
 
-    def test_for_statement8(self):
+    def test_for_statement41(self):
         """ Test 441 """
         input = """
         Function main(){
@@ -724,10 +723,10 @@ class CheckSuite(unittest.TestCase):
         """ Test 454 """
         input = """
         Function main(){
-            For i In [1, 2, 3] {
-                Call(printSLn, [i]);
+            For i In ["1", "2", "3"] {
+                Call(printLn, [i]);
             }
-            Call(printSLn, [i]);
+            Call(printLn, [i]);
             Return 0;
         }
         """
@@ -744,9 +743,9 @@ class CheckSuite(unittest.TestCase):
                 year: 2021
             };
             For key Of a {
-                Call(printSLn, [ key +. a{"key"}]);
+                Call(printLn, [ key +. a{"key"}]);
             }
-            Call(printSLn, [ key +. a{"key"}]);
+            Call(printLn, [ key +. a{"key"}]);
 
             Return 0;
         }
@@ -758,7 +757,7 @@ class CheckSuite(unittest.TestCase):
         """ Test 56 """
         input = """
         Function main(){
-            Let a =[1, 2, 3, 4, 5];
+            Let a[5] =[1, 2, 3, 4, 5];
             Let b = {name: "Pham", age:21};
             a = b;
             Return 0;
@@ -772,11 +771,11 @@ class CheckSuite(unittest.TestCase):
         input = """
         Function main(){
             Let a:Boolean;
-            If(a){
-                Call(printSLn, ["Back khoa"]);
+            If(True){
+                Call(printLn, ["Back khoa"]);
             }
             Elif(!a){
-                Call(printSLn, ["Kinh Te"]);
+                Call(printLn, ["Kinh Te"]);
             }
             Else{
                 Return b;
@@ -803,7 +802,7 @@ class CheckSuite(unittest.TestCase):
             }
             Let x:String;
             x = a;
-            return 0;
+            Return 0;
         }
         """
         expect = "Type Mismatch In Statement: Assign(Id(x),Id(a))"
@@ -817,7 +816,7 @@ class CheckSuite(unittest.TestCase):
             If(a){
                 Let c= 100;
             }
-            return 0;
+            Return 0;
         }
         """
         expect = "Type Mismatch In Statement: If(Id(a),[VarDecl(Id(c),NoneType,NumberLiteral(100.0))])"
@@ -841,6 +840,707 @@ class CheckSuite(unittest.TestCase):
         expect = "Undeclared Identifier: u"
         self.assertTrue(TestChecker.test(input,expect,460))
 
+    def test_461(self):
+        """ Test 461 """
+        input = """
+        Let x:Number;
+        Function main(a[5], i) {
+            Let x;
+            While (i < 5) {
+                x = "HCMUT";
+            }
+            x = "Pham VD";
+            Return u;
+        }
+        """
+        expect = "Undeclared Identifier: u"
+        self.assertTrue(TestChecker.test(input,expect,461))
+    
+    def test_462(self):
+        """ Scope """
+        input = """
+        Let x:Number;
+        Function main(a[5], i) {
+            Let x;
+            While (i < 5) {
+                x = "HCMUT";
+                If(True){
+                    a[2] = x;
+                    a[2] = 10;
+
+                }
+            }
+            x = "Pham VD";
+            Return u;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(ArrayAccess(Id(a),[NumberLiteral(2.0)]),NumberLiteral(10.0))"
+        self.assertTrue(TestChecker.test(input,expect,462))
+    
+    def test_463(self):
+        """ Scope """
+        input = """
+        Let x:Number;
+        Function main(a[5], i) {
+            Let x;
+            While (i < 5) {
+                x = "HCMUT";
+                For j In a{
+                    Let a = x;
+                    Let j;
+
+                }
+            }
+            x = "Pham VD";
+            Return u;
+        }
+        """
+        expect = "Redeclared Variable: j"
+        self.assertTrue(TestChecker.test(input,expect,463))
+        
+    def test_464(self):
+        """ Scope """
+        input = """
+        Let a:Number = [1,2,3,4];
+        Function foo(){
+            Return a;
+        }
+        Function main(a[5], i) {
+            Let x;
+            While (i < 5) {
+                x = "HCMUT";
+                For j In Call(foo, []){
+                    Let a = x;
+                    Let j;
+
+                }
+            }
+            x = "Pham VD";
+            Return u;
+        }
+        """
+        expect = "Redeclared Variable: j"
+        self.assertTrue(TestChecker.test(input,expect,464))
+    
+    def test_464(self):
+        """ Scope """
+        input = """
+        Let a = {name: "Pham", age:21};
+        Function foo(){
+            Return a;
+        }
+        Function main(a[5], i) {
+            Let x;
+            While (i < 5) {
+                x = "HCMUT";
+                For j In Call(foo, []){
+                    Let a = x;
+                    Let j;
+
+                }
+            }
+            x = "Pham VD";
+            Return u;
+        }
+        """
+        expect = "Type Mismatch In Statement: ForIn(Id(j),CallExpr(Id(foo),[]),[VarDecl(Id(a),NoneType,Id(x)),VarDecl(Id(j),NoneType)])"
+        self.assertTrue(TestChecker.test(input,expect,464))
+    
+
+    def test65(self):
+        input="""
+            Function foo(a,b)
+            {
+                Let c;
+                For i In [1,10] {
+                    c = Call(foo,[c,a]);
+                }
+                Return -1;
+            }
+            Function main()
+            {
+                Let z;
+                z = Call(foo, [1,2]) + Call(foo, [True, False]);
+            }
+        """
+        expect=str(TypeCannotBeInferred(Assign(Id('c'),CallExpr(Id('foo'),[Id('c'),Id('a')]))))
+        self.assertTrue(TestChecker.test(input,expect,465))
+
+    def test66(self):
+        input = """
+            Function foo(a)
+            {
+                Return;
+            }
+            Function main()
+            {
+                Let y, a, x;
+                y = a + Call(foo, [x]);
+            }
+        """
+        expect = str(TypeCannotBeInferred(BinaryOp('+',Id('a'),CallExpr(Id('foo'),[Id('x')]))))
+        self.assertTrue(TestChecker.test(input,expect,466))
+
+    def test67(self):
+        input = """
+            Let a, b;
+            Function foo(x,y,z)
+            {
+                Return;
+            }
+            Function main()
+            {
+                Let b = 1;
+                If (b ==. "John") { 
+                    Return a; 
+                }
+                Call(foo,[1,2,3]);
+            }
+        """
+        expect = str(TypeMismatchInExpression(BinaryOp('==.',Id('b'),StringLiteral('John'))))
+        self.assertTrue(TestChecker.test(input, expect, 467))
+
+
+    def test_468(self):
+        """Simple program: main"""
+        input = """
+        Let x, y, z:Number;
+        Constant $x=2;
+        Function foo(a){
+        }
+        Function main() {
+            If(Call(foo,[x])){
+
+            }
+        }
+        """
+        expect = str(TypeCannotBeInferred(If([(CallExpr(Id("foo"),[Id("x")]),[])],[])))
+        self.assertTrue(TestChecker.test(input, expect, 468))
+
+    def test_469(self):
+        """Simple program: main"""
+        input = """
+        Let x, y, z:Number;
+        Constant $x=2;
+        Function foo(a){
+        }
+        Function foo1(a){
+        }
+        Function main() {
+            If(Call(foo,[z])){
+            }
+            Elif(x){
+            }
+            Else{
+                If(Call(foo1,[x])){
+                    a = 10;
+                }
+            }
+        }
+        """
+        expect = "Undeclared Identifier: a"
+        self.assertTrue(TestChecker.test(input, expect, 469))
+
+    def test_470(self):
+        """Simple program: main"""
+        input = """
+        Let x, y, z:Number;
+        Constant $x=2;
+        Function foo(a){
+            Return True;
+        }
+        Function foo1(a){
+            Return;
+        }
+        Function main() {
+            While(Call(foo,[z])){
+                While(Call(foo,[x])){
+                    While(Call(foo1,[y])){
+                        Return;
+                    }
+                }
+            }
+        }
+        """
+        expect = "Type Cannot Be Inferred: While(CallExpr(Id(foo1),[Id(y)]),[Return()])"
+        self.assertTrue(TestChecker.test(input, expect, 470))
+
+    def test_471(self):
+        """Simple program: main"""
+        input = """
+        Let x[5], y, z:Number;
+        Constant $x=2;
+        Function foo(a){
+            Return;
+        }
+        Function foo1(a){
+            Return;
+        }
+        Function main() {
+            For x Of {name: "Pham", age:21}{
+                 While(Call(foo,[x])){
+                     
+                     }
+            }
+        }
+        """
+        expect = str(TypeCannotBeInferred( While(CallExpr(Id("foo"),[Id("x")]),[]) ))
+        self.assertTrue(TestChecker.test(input, expect, 471))
+
+    def test_d472(self):
+        """Simple program: main"""
+        input = """
+        Let x:Number, y:JSON, z={ name: False};
+        Constant $x=2;
+        Function foo(a){
+            a=2;
+            Return 2;
+        }
+        Function main() {
+            For x Of z {
+                Let y=2;
+                For d Of {name: "Pham", age:21} {
+                    If(y){}
+                 }
+            }
+        }
+        """
+        expect = str(TypeMismatchInStatement(
+            If([(Id("y"),[])],[])
+             ))
+        self.assertTrue(TestChecker.test(input, expect, 472))
+
+        
+    def test_d473(self):
+        """Simple program: main"""
+        input = """
+        Let a:Number;
+        Function main() {
+            Let b;
+            If(True) {
+                Let c;
+                c = a;
+            }
+            c = b;
+        }
+        """
+        expect = "Undeclared Identifier: c"
+        self.assertTrue(TestChecker.test(input, expect, 473))
+
+    def test_74(self):
+        """Simple program: main"""
+        input = """
+        Let x, y, z:Number;
+        Constant $x=2;
+        Function foo(a){
+            a=2;
+            Return True;
+        }
+        Function main() {
+            While(Call(foo,[x])){
+                 While(z){
+                }
+            }
+        }
+        """
+        expect = str(TypeMismatchInStatement(While(Id("z"),[])))
+        self.assertTrue(TestChecker.test(input, expect, 474))
+
+    def test_75(self):
+        """Simple program: main"""
+        input = """
+        Let x, y, z:Number;
+        Constant $x=2;
+        Function foo(a){
+            a=2;
+            Return True;
+        }
+        Function foo1(a){
+            a=2;
+            Return ;
+        }
+        Function main() {
+            While(Call(foo,[x])){
+                x=5;
+                Let x:Boolean;
+                x=Call(foo,[z]);
+                x=2;
+            }
+        }
+        """
+        expect = str(TypeMismatchInStatement(Assign(Id("x"),NumberLiteral(2.0))))
+        self.assertTrue(TestChecker.test(input, expect, 475))
+
+    def test_76(self):
+        """Simple program: main"""
+        input = """
+        Let x[5], y, z:Number;
+        Constant $x=2;
+        Function foo(a[5]){
+            ##a=2;##
+            Return True;
+        }
+        Function foo1(a){
+            a=2;
+            Return ;
+        }
+        Function main() {
+            While(Call(foo,[x])){
+                x[2]=5;
+                Let x:JSON;
+                x{"Name"}=3;
+                x=2;
+            }
+        }
+        """
+        expect = str(TypeMismatchInStatement(
+            Assign(Id("x"),NumberLiteral(2.0))
+            ))
+        self.assertTrue(TestChecker.test(input, expect, 476))
+
+    def test_77(self):
+        """Simple program: main"""
+        input = """
+        Let x, y, z:Number;
+        Function main() {
+            Call(print,[z]);
+        }
+        """
+        expect = str(TypeMismatchInStatement(
+            CallStmt(Id("print"),[Id("z")])
+            ))
+        self.assertTrue(TestChecker.test(input, expect, 477))
+
+
+        def test_78(self):
+            """Simple program: main"""
+        input = """
+        Let x[5,2], y, z:Boolean;
+        Function foo(x){
+            If(x){
+                Return z;
+            }
+            Return x;
+        }
+        Function foo1(a[]){
+        }
+        Function main() {
+            y=x[5,2,4];
+        }
+        """
+        expect = str(TypeMismatchInExpression(\
+            ArrayAccess(Id("x"),[NumberLiteral(5.0),NumberLiteral(2.0),NumberLiteral(4.0)])\
+            ))
+        self.assertTrue(TestChecker.test(input, expect, 478))
+
+    def test_79(self):
+        input = """
+            Let x = 10.0;
+            Function factorial(n)
+            {
+                If (n <= 1) {
+                 Return n*Call(factorial,[n-1]);
+                }
+                Else {
+                Return 1;
+                } 
+                
+            }
+            Function main()
+            {
+                Return Call(factorial,[]);
+            }
+        """
+        expect = str(TypeMismatchInExpression(CallExpr(Id("factorial"),[])))
+        self.assertTrue(TestChecker.test(input,expect,479))
+
+    def test_80(self):
+        """Simple program: main"""
+        input = """
+        Let x, y, z:Number;
+        Constant $x=2;
+        Function foo(a){
+            a=2;
+            Return True;
+        }
+        Function foo1(a){
+            a=2;
+            Return ;
+        }
+        Function main() {
+            While(Call(foo,[x])){
+                x=5;
+                Let x:JSON;
+                x={ name:"Pham", age:21};
+                x{"age"}=3;
+                x=2;
+            }
+        }
+        """
+        expect = str(TypeMismatchInStatement(
+            Assign(Id("x"),NumberLiteral(2.0))
+            ))
+        self.assertTrue(TestChecker.test(input, expect, 480))
+
+    def test_481(self):
+        """ Scope """
+        input = """
+        Let a = {name: "Pham", age:21};
+        Function foo(){
+            Return [1, 2, 3];
+        }
+        Function main(a[5], i) {
+            Let x;
+            While (i < 5) {
+                x = "HCMUT";
+                For j In Call(foo, []){
+                    Let a = x;
+                    Let b:Boolean = a;
+
+                }
+            }
+            x = "Pham VD";
+            Return u;
+        }
+        """
+        expect = "Type Mismatch In Statement: VarDecl(Id(b),BooleanType,Id(a))"
+        self.assertTrue(TestChecker.test(input,expect,481))
+
+    def test_482(self):
+        """ Scope """
+        input = """
+        Let a = {name: "Pham", age:21};
+        Function foo(){
+            Return True;
+        }
+        Function main(arr[5], i) {
+            If(Call(foo, [])){
+                Let a = True;
+                If(a){
+                    a = 100;
+                }
+            }
+            Return u;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(a),NumberLiteral(100.0))"
+        self.assertTrue(TestChecker.test(input,expect,482))
+
+
+    def test_483(self):
+        """ Scope """
+        input = """
+        Function main() {
+            While(True){
+                Let read = True;
+                If(True){
+                    Let c;
+                }
+            }
+            Return u;
+        }
+        """
+        expect = "Undeclared Identifier: u"
+        self.assertTrue(TestChecker.test(input,expect,483))
+
+
+    def test_484(self):
+        """ Scope """
+        input = """
+        Let a;
+        Function main() {
+            Let a;
+            For i In [1,2,3,4]{
+                Let b;
+                If(True){
+                    Constant $c = 10;
+                    While(True){
+                        Let a;
+                        a = 10;
+                    }
+                }
+                b = 100;
+                a = b;
+            }
+            a = "hcmut";
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(a),StringLiteral(hcmut))"
+        self.assertTrue(TestChecker.test(input,expect,484))
+
+    def test_485(self):
+        """ Scope """
+        input = """
+        Let a;
+        Let b:String;
+        Function main() {
+            a = b;
+            Let b:Number = a;
+            
+            Return a;
+        }
+        """
+        expect = "Type Mismatch In Statement: VarDecl(Id(b),NumberType,Id(a))"
+        self.assertTrue(TestChecker.test(input,expect,485))
+
+    def test_86(self):
+        """Simple program: main"""
+        input = """
+        Let x;
+        Let y;
+        Constant $x:Number=2.0;
+        Constant $x:Number=5.0;
+        Function main() {
+        }
+        """
+        expect = str(Redeclared(Constant(),"$x"))
+        self.assertTrue(TestChecker.test(input, expect, 486))
+
+    def test_87(self):
+        """Simple program: main"""
+        input = """
+        Let x;
+        Let y;
+        Constant $x=2;
+        Function foo(a,b,c,d,e,a){
+        }
+        Function main() {
+        }
+        """
+        expect = str(Redeclared(Parameter(),"a"))
+        self.assertTrue(TestChecker.test(input, expect, 487))
+
+    def test_88(self):
+        """Simple program: main"""
+        input = """
+        Let x;
+        Constant $x=2;
+        Function foo(a,b,c,d,e,x,y){
+            a=True&&f;
+        }
+        Function main() {
+
+        }
+        """
+        expect = str(Undeclared(Identifier(),"f"))
+        self.assertTrue(TestChecker.test(input, expect, 488))
+
+    def test_89(self):
+        """Simple program: main"""
+        input = """
+        Let x;
+        Constant $x=2;
+        Function foo(a,b){
+            a=f==2.3;
+        }
+        Function main() {
+            Return;
+        }
+        """
+        expect = str(Undeclared(Identifier(),"f"))
+        self.assertTrue(TestChecker.test(input, expect, 489))
+
+    def test_90(self):
+        """Simple program: main"""
+        input = """
+        Let x;
+        Constant $x=2;
+        Function foo(a){
+        }
+        Function main() {
+            If(x){
+                Let k=$x;
+            }
+            Call(foo, [Call(foo, [k])] );
+        }
+        """
+        expect = str(Undeclared(Identifier(),"k"))
+        self.assertTrue(TestChecker.test(input, expect, 490))
+
+    def test_91(self):
+        """Simple program: main"""
+        input = """
+        Let x, y, z:Number;
+        Constant $x=2;
+        Function foo(a){
+        }
+        Function foo1(a){
+        }
+        Function main() {
+            If(Call(foo,[z])){
+            }
+            Elif(x){
+            }
+            Else{
+                If(Call(foo1,[x])){
+                    Let m;
+                }
+            }
+            Return m;
+        }
+        """
+        expect = "Undeclared Identifier: m"
+        self.assertTrue(TestChecker.test(input, expect, 491))
+
+    def test_92(self):
+        """Simple program: main"""
+        input = """
+        Let x, y[5], z:Number;
+        Constant $x=2;
+        Function foo(a){
+            a=2;
+            Return 2;
+        }
+        Function main() {
+            For x Of z {
+            }
+        }
+        """
+        expect = str(TypeMismatchInStatement(
+            ForOf(Id("x"),Id("z"),[])
+             ))
+        self.assertTrue(TestChecker.test(input, expect, 492))
+
+    def test_93(self):
+        """Simple program: main"""
+        input = """
+        Let x, y, z:Number;
+        Constant $x=2;
+        Function foo(a){
+            a=2;
+            Return True;
+        }
+        Function main() {
+            While(Call(foo,[x])){
+                 While(z){
+                }
+            }
+        }
+        """
+        expect = str(TypeMismatchInStatement(While(Id("z"),[])))
+        self.assertTrue(TestChecker.test(input, expect, 493))
+
+    def test_94(self):
+        """Simple program: main"""
+        input = """
+        Let x:Number, y:Boolean, z:String,t:JSON;
+        Function foo(x){
+            If(x){
+                Return True;
+            }
+            Return x;
+        }
+        Function foo1(a[]){
+        }
+        Function main() {
+            Let a,b;
+            a=z==.z;
+            b=a+.z;
+        }
+        """
+        expect = str(TypeMismatchInExpression(BinaryOp("+.",Id("a"),Id("z"))))
+        self.assertTrue(TestChecker.test(input, expect, 494))
+    
 
     # test case của thầy
 
@@ -856,44 +1556,58 @@ class CheckSuite(unittest.TestCase):
     def test_diff_numofparam_stmt(self):
         """Complex program"""
         input = """Function main() {
-            Call(printSLn, []);
+            Call(printLn, []);
         }"""
-        expect = str(TypeMismatchInStatement(CallStmt(Id("printSLn"), [])))
+        expect = str(TypeMismatchInStatement(CallStmt(Id("printLn"), [])))
         self.assertTrue(TestChecker.test(input, expect, 496))
 
-    # def test_diff_numofparam_expr(self):
-    #     """More complex program"""
-    #     input = """Function main() {
-    #         Call(printStrLn, [Call(read, [10])]);
-    #     }
-    #     """
-    #     expect = str(TypeMismatchInExpression(
-    #         CallExpr(Id("read"), [NumberLiteral(10)])))
-    #     self.assertTrue(TestChecker.test(input, expect, 497))
+    def test_diff_numofparam_expr(self):
+        """More complex program"""
+        input = """Function main() {
+            Call(printLn, [Call(read, [10])]);
+        }
+        """
+        expect = str(TypeMismatchInExpression(
+            CallExpr(Id("read"), [NumberLiteral(10.0)])))
+        self.assertTrue(TestChecker.test(input, expect, 497))
 
-    # def test_undeclared_function_use_ast(self):
-    #     """Simple program: main """
-    #     input = Program([FuncDecl(Id("main"), [], ([], [
-    #         CallExpr(Id("foo"), [])]))])
-    #     expect = str(Undeclared(Function(), "foo"))
-    #     self.assertTrue(TestChecker.test(input, expect, 498))
 
-    # def test_diff_numofparam_expr_use_ast(self):
-    #     """More complex program"""
-    #     input = Program([
-    #         FuncDecl(Id("main"), [], ([], [
-    #             CallStmt(Id("printSLn"), [
-    #                 CallExpr(Id("read"), [NumberLiteral(4.0)])
-    #             ])]))])
-    #     expect = str(TypeMismatchInExpression(
-    #         CallExpr(Id("read"), [NumberLiteral(4.0)])))
-    #     self.assertTrue(TestChecker.test(input, expect, 499))
+    def test_undeclared_function_use_ast(self):
+        """Simple program: main """
+        input = """
+        Function main() {
+            Call(foo, []);
+            Return a;
+        }"""
+        expect = str(Undeclared(Function(), "foo"))
+        self.assertTrue(TestChecker.test(input, expect, 498))
 
-    # def test_diff_numofparam_stmt_use_ast(self):
-    #     """Complex program"""
-    #     input = Program([
-    #         FuncDecl(Id("main"), [], ([], [
-    #             CallStmt(Id("printStrLn"), [])]))])
-    #     expect = str(TypeMismatchInStatement(CallStmt(Id("printStrLn"), [])))
-    #     self.assertTrue(TestChecker.test(input, expect, 500))
+    def test_diff_numofparam_expr_use_ast(self):
+        """More complex program"""
+        input ="""
+        Function main() {
+            Call(printLn, [Call(read, [4.0])]);
+            Return a;
+        }
+        """
 
+        expect = str(TypeMismatchInExpression(
+            CallExpr(Id("read"), [NumberLiteral(4.0)])))
+        self.assertTrue(TestChecker.test(input, expect, 499))
+
+    def test_no_entry_point1(self):
+        """ Test 500 """
+        input = """
+        Function foo(a){
+            Return [[1,2],[3,4]];
+        }
+        Function main(){
+            Let a[2,2] = [[1,2],[3,4]];
+            For i In a{
+                i = 10;
+            }
+            Return 0;
+        }
+        """
+        expect = "Type Mismatch In Statement: Assign(Id(i),NumberLiteral(10.0))"
+        self.assertTrue(TestChecker.test(input,expect,500))

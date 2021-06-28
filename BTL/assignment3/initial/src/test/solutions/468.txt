@@ -1,1 +1,1 @@
-Type Mismatch In Statement: If(Id(x),[Return(BooleanLiteral(true))])
+Type Cannot Be Inferred: If(CallExpr(Id(foo),[Id(x)]),[])

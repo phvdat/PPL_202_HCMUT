@@ -1,0 +1,10 @@
+
+        Let a;
+        Let b:String;
+        Function main() {
+            a = b;
+            Let b:Number = a;
+            
+            Return a;
+        }
+        

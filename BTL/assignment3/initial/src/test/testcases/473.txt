@@ -1,15 +1,11 @@
 
-        Let x:Number, y:Boolean, z:String,t:JSON;
-        Function foo(x){
-            If(x){
-                Return True;
-            }
-            Return x;
-        }
-        Function foo1(a[]){
-        }
+        Let a:Number;
         Function main() {
-            Let a,b;
-            a= Call(foo,[t]);
+            Let b;
+            If(True) {
+                Let c;
+                c = a;
+            }
+            c = b;
         }
         

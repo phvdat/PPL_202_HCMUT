@@ -1,0 +1,12 @@
+
+        Function foo(a){
+            Return [[1,2],[3,4]];
+        }
+        Function main(){
+            Let a[2,2] = [[1,2],[3,4]];
+            For i In a{
+                i = 10;
+            }
+            Return 0;
+        }
+        

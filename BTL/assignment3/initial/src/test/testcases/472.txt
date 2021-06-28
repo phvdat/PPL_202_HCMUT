@@ -1,15 +1,16 @@
 
-        Let x:Number, y:Boolean, z:String,t:JSON;
-        Function foo(x){
-            If(x){
-                Return True;
-            }
-            Return x;
-        }
-        Function foo1(a[]){
+        Let x:Number, y:JSON, z={ name: False};
+        Constant $x=2;
+        Function foo(a){
+            a=2;
+            Return 2;
         }
         Function main() {
-            Let a,b;
-            a= Call(foo,[y,y]);
+            For x Of z {
+                Let y=2;
+                For d Of {name: "Pham", age:21} {
+                    If(y){}
+                 }
+            }
         }
         

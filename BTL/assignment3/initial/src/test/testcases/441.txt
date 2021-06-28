@@ -1,14 +1,13 @@
 
-        Let x, y[5], z:Number;
-        Constant $x=2;
-        Function foo(a){
-            a=2;
-            Return 2;
-        }
-        Function main() {
-            For x In y {
-                Let y;
-                For z In y { }
+        Function main(){
+            Let a = {
+                name: "Yanxi Place",
+                address: "Chinese Forbidden City"
+            };
+            For key Of a {
+                key = 10;
             }
+            key = "Name";
+            Return 0;
         }
         

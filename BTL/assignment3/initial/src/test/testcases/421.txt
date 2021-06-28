@@ -1,4 +1,4 @@
 Function main() {
-            Call(printSLn, ["HCMUT"]);
+            Call(printLn, ["HCMUT"]);
             a = 10;
         }

@@ -1,1 +1,1 @@
-Type Mismatch In Statement: CallStmt(Id(printSLn),[NumberLiteral(5.0)])
+Type Mismatch In Statement: CallStmt(Id(printLn),[NumberLiteral(5.0)])

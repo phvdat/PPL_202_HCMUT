@@ -1,1 +1,1 @@
-Type Mismatch In Statement: If(Id(x),[Return(Id(z))])
+Type Mismatch In Statement: Assign(ArrayAccess(Id(a),[NumberLiteral(2.0)]),NumberLiteral(10.0))

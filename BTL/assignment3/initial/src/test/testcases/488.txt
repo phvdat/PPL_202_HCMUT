@@ -1,0 +1,10 @@
+
+        Let x;
+        Constant $x=2;
+        Function foo(a,b,c,d,e,x,y){
+            a=True&&f;
+        }
+        Function main() {
+
+        }
+        

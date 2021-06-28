@@ -1,14 +1,16 @@
 
-        Let x[5,2], y, z:Boolean;
-        Function foo(x){
-            If(x){
-                Return z;
+        Let x:Number;
+        Function main(a[5], i) {
+            Let x;
+            While (i < 5) {
+                x = "HCMUT";
+                If(True){
+                    a[2] = x;
+                    a[2] = 10;
+
+                }
             }
-            Return x;
-        }
-        Function foo1(a[]){
-        }
-        Function main() {
-            y=x[5,2];
+            x = "Pham VD";
+            Return u;
         }
         

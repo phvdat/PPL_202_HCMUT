@@ -1,0 +1,19 @@
+
+        Let a = {name: "Pham", age:21};
+        Function foo(){
+            Return [1, 2, 3];
+        }
+        Function main(a[5], i) {
+            Let x;
+            While (i < 5) {
+                x = "HCMUT";
+                For j In Call(foo, []){
+                    Let a = x;
+                    Let b:Boolean = a;
+
+                }
+            }
+            x = "Pham VD";
+            Return u;
+        }
+        

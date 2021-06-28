@@ -67,31 +67,45 @@ class Symbol:
 
 
 def setType(id, c, typ):
-    for i in c:
-        if id.name == i.name:
-            i.mtype.restype = typ()
+    find = False
+    for elem in c:
+        for i in elem:
+            if id.name == i.name:
+                find = True
+                i.mtype.restype = typ()
+                break
+        if find:
             break
 def setTypeArrAccess(id, c, typ):
-    for i in c:
-        if id.name == i.name:
-            i.mtype.restype.eletype = typ()
+    find = False
+    for elem in c:  
+        for i in elem:
+            if id.name == i.name:
+                find = True
+                i.mtype.restype.eletype = typ()
+                break
+        if find:
             break
 
 class StaticChecker(BaseVisitor):
     def __init__(self, ast):
         self.ast = ast
         self.global_envi = [
+            Symbol("str2num", MType([StringType()], VoidType())),
+            Symbol("num2str", MType([NumberType()], StringType())),
+            Symbol("str2bool", MType([StringType()], VoidType)),
+            Symbol("bool2str", MType([BoolType()], StringType())),
 
             Symbol("read", MType([], StringType())),
             Symbol("print", MType([StringType()], VoidType())),
-            Symbol("printSLn", MType([StringType()], VoidType()))]
+            Symbol("printLn", MType([StringType()], VoidType()))]
 
     def check(self):
         return self.visit(self.ast, self.global_envi)
 
     # decl: List[Decl]
     def visitProgram(self, ast, c):
-        c = self.global_envi[:]
+        c = [self.global_envi[:]]
         
         # Check main function
         is_main = False
@@ -104,19 +118,22 @@ class StaticChecker(BaseVisitor):
 
         # Check Redeclare
         for x in ast.decl:
-            if isinstance(x, VarDecl):
-                c.append(self.visit(x, c))
+            if isinstance(x, VarDecl): 
+                c[0].append(self.visit(x, c))
 
             elif isinstance(x, ConstDecl):
-                c.append(self.visit(x, c))
+                c[0].append(self.visit(x, c))
 
             elif isinstance(x, FuncDecl):
-                lst_typ, return_typ = self.visit(x, c)
-                func = Symbol(x.name.name, MType(lst_typ, return_typ))
-                for i in c:
+                func = Symbol(x.name.name, MType([], NoneType()))
+                for i in c[0]:
                     if i.name == func.name:
                         raise Redeclared(Function(), func.name)
-                c.append(func)
+                c[0].append(func)
+                pram_lst = self.visit(x, c)
+                for elem in c[0]:
+                    if elem.name == x.name.name:
+                        elem.mtype.intype = pram_lst
 
 
     # variable: Id
@@ -124,20 +141,24 @@ class StaticChecker(BaseVisitor):
     # typ: Type               # NoneType if empty
     # varInit: Expr           # None if no initial
     def visitVarDecl(self, ast, c):
-        for i in c:
+        for i in c[0]:
             if i.name == ast.variable.name:
                 raise Redeclared(Variable(), ast.variable.name)
         lst = ast.varDimen
         if lst:
             for i in lst:
-                if isinstance(self.visit(i, c), NoneType):
+                if str(self.visit(i, c)) == "NoneType":
                     raise TypeCannotBeInferred(ast)
-                if(not isinstance(self.visit(i, c), NumberType)):
+                if str(self.visit(i, c)) != "NumberType":
                     raise TypeMismatchInExpression(ast)
 
         vartype = ast.typ
+        vInit = None
         if ast.varInit:
             vInit = self.visit(ast.varInit, c)
+        if str(vInit) == "TypeCannotBeInferred":
+            raise TypeCannotBeInferred(ast)
+            
         # =======================ARRAY========================
         if lst: # if array declare
             if ast.varInit:
@@ -152,6 +173,14 @@ class StaticChecker(BaseVisitor):
                     else:
                         raise TypeMismatchInStatement(ast)
                 if isinstance(vartype, ArrayType):      # if type elem = arraytype => false
+                    raise TypeMismatchInStatement(ast)
+                if not isinstance(self.visit(ast.varInit, c), ArrayType):
+                    raise TypeMismatchInStatement(ast)
+                if len(lst) != len(self.visit(ast.varInit, c).dimen):
+                    raise TypeMismatchInStatement(ast)
+                if str(vartype) == "NoneType":
+                    return Symbol(ast.variable.name, MType([], ArrayType(lst,self.visit(ast.varInit, c).eletype)))
+                if str(vartype) != str(self.visit(ast.varInit, c).eletype):
                     raise TypeMismatchInStatement(ast)
             return Symbol(ast.variable.name, MType([], ArrayType(lst,vartype)))
         
@@ -195,17 +224,19 @@ class StaticChecker(BaseVisitor):
     # constInit: Expr
 
     def visitConstDecl(self, ast, c):
-        for i in c:
+        for i in c[0]:
             if i.name == ast.constant.name:
                 raise Redeclared(Constant(), ast.constant.name)
         lst = ast.constDimen
         if lst:
             for i in lst:
-                if(not isinstance(self.visit(i, c), NumberType)):
+                if str(self.visit(i, c)) != "NumberType":
                     raise TypeMismatchInStatement(ast)
         
         vartype = ast.typ
         vInit = self.visit(ast.constInit, c)
+        if str(vInit) == "TypeCannotBeInferred":
+            raise TypeCannotBeInferred(ast)
         # =======================ARRAY========================
         if lst: # if array declare
             if not isinstance(vInit,ArrayType):     # if rhs not array type
@@ -220,13 +251,21 @@ class StaticChecker(BaseVisitor):
                     raise TypeMismatchInStatement(ast)
             if isinstance(vartype, ArrayType):      # if type elem = arraytype => false
                 raise TypeMismatchInStatement(ast)
-            return Symbol(ast.variable.name, MType([], ArrayType(lst,vartype)))
+            if not isinstance(self.visit(ast.constInit, c), ArrayType):
+                raise TypeMismatchInStatement(ast)
+            if len(lst) != len(self.visit(ast.constInit, c).dimen):
+                raise TypeMismatchInStatement(ast)
+            if str(vartype) == "NoneType":
+                return Symbol(ast.constant.name, MType([], ArrayType(lst,self.visit(ast.constInit, c).eletype)))
+            if str(vartype) != str(self.visit(ast.constInit, c).eletype):
+                raise TypeMismatchInStatement(ast)
+            return Symbol(ast.constant.name, MType([], ArrayType(lst,vartype)))
         # =======================JSON========================
         if ast.constInit:
             if str(vInit) == "JSONType":
                 if str(vartype) != "NoneType":
                     raise TypeMismatchInStatement(ast)
-                return Symbol(ast.variable.name, MType([], JSONType()))
+                return Symbol(ast.constant.name, MType([], JSONType()))
             if str(vartype) == "JSONType":
                 if str(vInit) == "NoneType":
                     if isinstance(ast.constInit, CallExpr): # if CallExp: need .method
@@ -259,44 +298,57 @@ class StaticChecker(BaseVisitor):
     # param: List[VarDecl]
     # body: List[Inst]
     def visitFuncDecl(self, ast, c):
-        local_envi = []
+
+        local_envi = [[]]
         para_list = [] # use to check param có bị trùng
-        return_typ = NoneType()
         for param in ast.param:
             if param.variable.name in para_list:
                 raise Redeclared(Parameter(), param.variable.name)
-
             else:
                 para_list.append(param.variable.name)
-                local_envi.append(self.visit(param, local_envi))
-                # if isinstance(param, ArrayAccess)
-        
+                local_envi[0].append(self.visit(param, local_envi))
+                        
         rt_param_lst = local_envi[:]
-
-        for stmt in ast.body:    
+        local_envi = local_envi + c
+        for elem in c[0]: # modify type pram_lst
+            if elem.name == ast.name.name:
+                elem.mtype.intype = [x.mtype.restype for x in rt_param_lst[0]]
+                        
+        for stmt in ast.body:
             if isinstance(stmt, VarDecl):
-                local_envi.append(self.visit(stmt, local_envi))
-                
+                local_envi[0].append(self.visit(stmt, local_envi))
             elif isinstance(stmt, ConstDecl):
-                local_envi.append(self.visit(stmt, local_envi))
+                local_envi[0].append(self.visit(stmt, local_envi))
             else:
-
                 if isinstance(stmt, Return):
-                    return_typ = self.visit(stmt, local_envi + c)
+                    for elem in c[0]:
+                        if elem.name == ast.name.name:
+                            elem.mtype.restype = self.visit(stmt, local_envi)
                 else:
-                    self.visit(stmt, local_envi + c)
-        return [x.mtype.restype for x in rt_param_lst] , return_typ
+                    self.visit(stmt, local_envi)
+        
+        return [x.mtype.restype for x in rt_param_lst[0]]
 
     # lhs: LHS
     # rhs: Expr
     def visitAssign(self, ast, c):
         typ2=self.visit(ast.rhs,c)
         typ1=self.visit(ast.lhs,c)
+        if str(typ1) == "TypeCannotBeInferred" or str(typ2) == "TypeCannotBeInferred":
+            raise TypeCannotBeInferred(ast)
         if type(typ1) is VoidType or type(typ2) is VoidType:
             raise TypeMismatchInStatement(ast)
+        if str(typ1) == "Unknown" or str(typ2) == "Unknown":
+            pass
+        elif isinstance(typ1, ArrayType) and isinstance(typ2, ArrayType):
+            if len(typ1.dimen) != len(typ2.dimen):
+                raise TypeMismatchInStatement(ast)
+            else:
+                pass
         else:
             if type(typ2) is NoneType and type(typ1) is NoneType:
                 raise TypeCannotBeInferred(ast)
+
             if type(typ1) is NoneType:
                 if isinstance(ast.lhs, CallExpr): # if CallExp: need .method
                     setType(ast.lhs.method, c, type(typ2))
@@ -310,114 +362,151 @@ class StaticChecker(BaseVisitor):
                     setType(ast.rhs.method, c, type(typ2))
                 elif isinstance(ast.rhs, ArrayAccess): # if ArrayAccess: need .arr
                     setTypeArrAccess(ast.rhs.arr, c, type(typ2))
-                
                 else:
                     setType(ast.rhs, c, type(typ1))
                 typ2 = typ1
             elif str(typ1) != str(typ2):
-                if str(typ1) == "Unknown" or str(typ2) == "Unknown":
-                    pass
-                else:
-                    raise TypeMismatchInStatement(ast)
+                raise TypeMismatchInStatement(ast)
     # ifthenStmt: List[Tuple[Expr, List[Inst]]]
     # elseStmt: List[Inst]  # for Else branch, empty list if no Else
     def visitIf(self, ast, c):
         ifthemStmt = ast.ifthenStmt
-        for elem in ifthemStmt:
-            local_envi = []
-            exp = self.visit(elem[0], c)
-            if str(exp) != "BooleanType":
-                raise TypeMismatchInStatement(ast)
-
-            for stmt in elem[1]:    
-                if isinstance(stmt, VarDecl):
-                    local_envi.append(self.visit(stmt, local_envi))      
-                elif isinstance(stmt, ConstDecl):
-                    local_envi.append(self.visit(stmt, local_envi))
+        for i in range(len(ifthemStmt)):
+            local_envi = [[]]
+            local_envi = local_envi + c
+            expr = self.visit(ast.ifthenStmt[i][0], c)
+            if str(expr) == "TypeCannotBeInferred":
+                raise TypeCannotBeInferred(ast)
+            if str(expr) == "NoneType":
+                if isinstance(ast.ifthenStmt[i][0], CallExpr): # if CallExp: need .method
+                    setType(ast.ifthenStmt[i][0].method, c, BoolType)
+                elif isinstance(ast.ifthenStmt[i][0], ArrayAccess): # if ArrayAccess: need .arr
+                    setTypeArrAccess(ast.ifthenStmt[i][0].arr, c, BoolType)
                 else:
-                    self.visit(stmt, local_envi + c)
-
+                    setType(ast.ifthenStmt[i][0], c, BoolType)
+            elif str(expr) != "BooleanType":
+                if str(expr) == "Unknown":
+                    pass
+                else:
+                    raise TypeMismatchInStatement(ast)
+            for stmt in ast.ifthenStmt[i][1]: # list [Inst] 
+                if isinstance(stmt, VarDecl):
+                    local_envi[0].append(self.visit(stmt, local_envi))
+                elif isinstance(stmt, ConstDecl):
+                    local_envi[0].append(self.visit(stmt, local_envi))
+                else:
+                    self.visit(stmt, local_envi)
+                    
         elStmt = ast.elseStmt
         if len(elStmt) !=0:
-            local_envi = []
+            local_envi = [[]] + c
             for stmt in elStmt:    
-                if isinstance(stmt, VarDecl):
-                    local_envi.append(self.visit(stmt, local_envi))
+                if isinstance(stmt, VarDecl): 
+                    local_envi[0].append(self.visit(stmt, local_envi))
                 elif isinstance(stmt, ConstDecl):
-                    local_envi.append(self.visit(stmt, local_envi))
+                    local_envi[0].append(self.visit(stmt, local_envi))
                 else:
-                    self.visit(stmt, local_envi + c)
-
-
+                    self.visit(stmt, local_envi)
 
     # exp: Expr
     # sl: List[Inst]
     def visitWhile(self, ast, c):
-        
-        local_envi = []
-        exp = self.visit(ast.exp, c)
-        if str(exp) != "BooleanType":
-            raise TypeMismatchInStatement(ast)
-
+        local_envi = [[]]
+        local_envi = local_envi + c
+        expr = self.visit(ast.exp, c)
+        if str(expr) == "TypeCannotBeInferred":
+            raise TypeCannotBeInferred(ast)
+        if str(expr) == "NoneType":
+            if isinstance(ast.exp, CallExpr): # if CallExp: need .method
+                setType(ast.exp.method, c, BoolType)
+            elif isinstance(ast.exp, ArrayAccess): # if ArrayAccess: need .arr
+                setTypeArrAccess(ast.exp.arr, c, BoolType)
+            else:
+                setType(ast.exp, c, BoolType)
+        elif str(expr) != "BooleanType":
+            if str(expr) == "Unknown":
+                pass
+            else:
+                raise TypeMismatchInStatement(ast)
         for stmt in ast.sl:    
             if isinstance(stmt, VarDecl):
-                local_envi.append(self.visit(stmt, local_envi))
-                
+                local_envi[0].append(self.visit(stmt, local_envi))
             elif isinstance(stmt, ConstDecl):
-                local_envi.append(self.visit(stmt, local_envi))
+                local_envi[0].append(self.visit(stmt, local_envi))
             else:
-                self.visit(stmt, local_envi + c)
+                self.visit(stmt, local_envi)
 
     # idx1: Id
     # expr: Expr
     # body: List[Inst]
     def visitForIn(self, ast, c):
-
         exp = self.visit(ast.expr, c)
+        if str(exp) == "TypeCannotBeInferred":
+            raise TypeCannotBeInferred(ast)
+        if str(exp) == "Unknown":
+            pass
         if not isinstance(exp,ArrayType):
             raise TypeMismatchInStatement(ast)
-
         typ = NoneType()
-        for elem in c:
-            if isinstance(ast.expr, Id):
-                if elem.name == ast.expr.name:
-                    typ = elem.mtype.restype.eletype
-            elif isinstance(ast.expr, CallExpr):
-                if elem.name == ast.expr.method.name:
-                    typ = elem.mtype.restype.eletype
-            elif isinstance(ast.expr, ArrayAccess): # if ArrayAccess: need .arr
-                if elem.name == ast.expr.arr.name:
-                    typ = elem.mtype.restype.eletype
-        local_envi = [Symbol(str(ast.idx1.name), MType([], typ))]
-
+        if isinstance(ast.expr, ArrayLiteral):
+            if len(exp.dimen)>1:
+                typ = ArrayType(exp.dimen[1:], exp.eletype)
+            else:
+                typ = exp.eletype
+        else:
+            for i in c: # get type idx1
+                for elem in i:
+                    if isinstance(ast.expr, Id):
+                        if elem.name == ast.expr.name:
+                            if len(elem.mtype.restype.dimen)>1:
+                                typ = ArrayType(elem.mtype.restype.dimen[1:], elem.mtype.restype.eletype)
+                            else:
+                                typ = elem.mtype.restype.eletype
+                            # raise TypeCannotBeInferred(typ)
+                            
+                    elif isinstance(ast.expr, CallExpr):
+                        if elem.name == ast.expr.method.name:
+                            if len(elem.mtype.restype.dimen)>1:
+                                typ = ArrayType(elem.mtype.restype.dimen[1:], elem.mtype.restype.eletype)
+                            else:
+                                typ = elem.mtype.restype.eletype
+                    elif isinstance(ast.expr, ArrayAccess):
+                        if elem.name == ast.expr.arr.name:
+                            if len(elem.mtype.restype.dimen)>1:
+                                typ = ArrayType(elem.mtype.restype.dimen[1:], elem.mtype.restype.eletype)
+                            else:
+                                typ = elem.mtype.restype.eletype
+        local_envi = [[Symbol(str(ast.idx1.name), MType([], typ))]]
+        local_envi = local_envi + c
         for stmt in ast.body:    
             if isinstance(stmt, VarDecl):
-                local_envi.append(self.visit(stmt, local_envi))
-                
+                local_envi[0].append(self.visit(stmt, local_envi))                
             elif isinstance(stmt, ConstDecl):
-                local_envi.append(self.visit(stmt, local_envi))
+                local_envi[0].append(self.visit(stmt, local_envi))
             else:
-                self.visit(stmt, local_envi + c)
+                self.visit(stmt, local_envi)
 
     # idx1: Id
     # expr: Expr
     # body: List[Inst]
     def visitForOf(self, ast, c):
-        local_envi = [Symbol(str(ast.idx1.name), MType([], NoneType()))]
-
+        local_envi = [[Symbol(str(ast.idx1.name), MType([], NoneType()))]]
+        local_envi = local_envi + c
         exp = self.visit(ast.expr, c)
-        if not isinstance(exp,JSONType):
+        if str(exp) == "TypeCannotBeInferred":
+            raise TypeCannotBeInferred(ast)
+        if str(exp) == "Unknown":
+            pass
+        elif str(exp) != "JSONType":
             raise TypeMismatchInStatement(ast)
-
         for stmt in ast.body:    
             if isinstance(stmt, VarDecl):
-                local_envi.append(self.visit(stmt, local_envi))
+                local_envi[0].append(self.visit(stmt, local_envi))
                 
             elif isinstance(stmt, ConstDecl):
-                local_envi.append(self.visit(stmt, local_envi))
+                local_envi[0].append(self.visit(stmt, local_envi))
             else:
-                self.visit(stmt, local_envi + c)
-
+                self.visit(stmt, local_envi)
     def visitBreak(self, ast, c):pass
     def visitContinue(self, ast, c):pass
 
@@ -433,66 +522,83 @@ class StaticChecker(BaseVisitor):
     def visitCallStmt(self, ast, c):
 
         param_lst = [self.visit(x,c) for x in ast.param]
-
-        for elem in c:
-            if ast.method.name == elem.name: # Find the func name
-                if type(elem.mtype.restype) is not VoidType:
-                    raise TypeMismatchInStatement(ast)
-                elif len(elem.mtype.intype) != len(param_lst):
-                    raise TypeMismatchInStatement(ast)
-                
-                else:
-                    for i in range(len(param_lst)):
-                        if str(elem.mtype.intype[i]) == 'NoneType' and str(param_lst[i]) =='NoneType':
-                            raise TypeCannotBeInferred(ast)
-                        elif str(elem.mtype.intype[i]) == 'NoneType':
-                            elem.mtype.intype[i] = param_lst[i]
-                        elif str(param_lst[i]) == 'NoneType':
-                            if isinstance(ast.param[i], CallExpr): # if CallExp: need .method
-                                setType(ast.param[i].method, c, type(elem.mtype.intype[i]))
-                            elif isinstance(ast.param[i], ArrayAccess): # if ArrayAccess: need .arr
-                                setTypeArrAccess(ast.param[i].arr, c, type(elem.mtype.intype[i]))
-                            else:
-                                setType(ast.param[i], c, type(elem.mtype.intype[i]))
-                        elif str(elem.mtype.intype[i]) != str(param_lst[i]):       
-                            if str(elem.mtype.intype[i]) == "Unknown" or str(param_lst[i]) == "Unknown":
-                                pass
-                            else:
-                                raise TypeMismatchInStatement(ast)
-                return elem.mtype.restype
+        for i in c:
+            for elem in i:
+                if ast.method.name == elem.name: # Find the func name
+                    if type(elem.mtype.restype) is not VoidType:
+                        raise TypeMismatchInStatement(ast)
+                    elif len(elem.mtype.intype) != len(param_lst):
+                        raise TypeMismatchInStatement(ast)
+                    else:
+                        for i in range(len(param_lst)):
+                            if isinstance(elem.mtype.intype[i], ArrayType) and not isinstance(param_lst[i], ArrayType):
+                                raise TypeMismatchInExpression(ast)
+                            elif not isinstance(elem.mtype.intype[i], ArrayType) and isinstance(param_lst[i], ArrayType):
+                                raise TypeMismatchInExpression(ast)
+                            elif isinstance(elem.mtype.intype[i], ArrayType) and isinstance(param_lst[i], ArrayType):
+                                if(len(elem.mtype.intype[i]).intype) != len(param_lst[i].intype):
+                                    raise TypeMismatchInStatement(ast)
+                                else:
+                                    pass
+                            else:                         
+                                if str(param_lst[i]) == "TypeCannotBeInferred":
+                                    raise TypeCannotBeInferred(ast)
+                                if str(elem.mtype.intype[i]) == 'NoneType' and str(param_lst[i]) =='NoneType':
+                                    raise TypeCannotBeInferred(ast)
+                                elif str(elem.mtype.intype[i]) == 'NoneType':
+                                    elem.mtype.intype[i] = param_lst[i]
+                                elif str(param_lst[i]) == 'NoneType':
+                                    if isinstance(ast.param[i], CallExpr): # if CallExp: need .method
+                                        setType(ast.param[i].method, c, type(elem.mtype.intype[i]))
+                                    elif isinstance(ast.param[i], ArrayAccess): # if ArrayAccess: need .arr
+                                        setTypeArrAccess(ast.param[i].arr, c, type(elem.mtype.intype[i]))
+                                    else:
+                                        setType(ast.param[i], c, type(elem.mtype.intype[i]))
+                                elif str(elem.mtype.intype[i]) != str(param_lst[i]):       
+                                    if str(elem.mtype.intype[i]) == "Unknown" or str(param_lst[i]) == "Unknown":
+                                        pass
+                                    else:
+                                        raise TypeMismatchInStatement(ast)
+                    return elem.mtype.restype
         raise Undeclared(Function(), ast.method.name)
 
     # method: Id
     # param: List[Expr]
     def visitCallExpr(self, ast, c):
         param_lst = [self.visit(x,c) for x in ast.param]
-
-        for elem in c:
-
-            if ast.method.name == elem.name:
-                if len(elem.mtype.intype) != len(param_lst):
-                    raise TypeMismatchInExpression(ast)
-                
-                else:
-
-                    for i in range(len(param_lst)):
-                        if str(elem.mtype.intype[i]) == 'NoneType' and str(param_lst[i]) =='NoneType':
-                            raise TypeMismatchInExpression(ast)
-                        elif str(elem.mtype.intype[i]) == 'NoneType':
-                            elem.mtype.intype[i] = param_lst[i]
-                        elif str(param_lst[i]) == "NoneType":
-                            if isinstance(ast.param[i], CallExpr): # if CallExp: need .method
-                                setType(ast.param[i].method, c, type(elem.mtype.intype[i]))
-                            elif isinstance(ast.param[i], ArrayAccess): # if ArrayAccess: need .arr
-                                setType(ast.param[i].arr, c, type(elem.mtype.intype[i]))
-                            else:
-                                setType(ast.param[i], c, type(elem.mtype.intype[i]))
-                        elif str(elem.mtype.intype[i]) != str(param_lst[i]):
-                            if str(elem.mtype.intype[i]) == "Unknown" or str(param_lst[i]) == "Unknown":
+        for i in c:
+            for elem in i:
+                if ast.method.name == elem.name:
+                    if len(elem.mtype.intype) != len(param_lst): # check length of param
+                        raise TypeMismatchInExpression(ast)
+                    else: # check Type of params
+                        for i in range(len(param_lst)):
+                            if isinstance(elem.mtype.intype[i], ArrayType) and not isinstance(param_lst[i], ArrayType):
+                                raise TypeMismatchInExpression(ast)
+                            elif not isinstance(elem.mtype.intype[i], ArrayType) and isinstance(param_lst[i], ArrayType):
+                                raise TypeMismatchInExpression(ast)
+                            elif isinstance(elem.mtype.intype[i], ArrayType) and isinstance(param_lst[i], ArrayType):
                                 pass
                             else:
-                                raise TypeMismatchInExpression(ast)
-                return elem.mtype.restype
+                                if str(param_lst[i]) == "TypeCannotBeInferred":
+                                    return "TypeCannotBeInferred"
+                                if str(elem.mtype.intype[i]) == 'NoneType' and str(param_lst[i]) =='NoneType':
+                                    return "TypeCannotBeInferred"
+                                elif str(elem.mtype.intype[i]) == 'NoneType':
+                                    elem.mtype.intype[i] = param_lst[i]
+                                elif str(param_lst[i]) == "NoneType":
+                                    if isinstance(ast.param[i], CallExpr): # if CallExp: need .method
+                                        setType(ast.param[i].method, c, type(elem.mtype.intype[i]))
+                                    elif isinstance(ast.param[i], ArrayAccess): # if ArrayAccess: need .arr
+                                        setType(ast.param[i].arr, c, type(elem.mtype.intype[i]))
+                                    else:
+                                        setType(ast.param[i], c, type(elem.mtype.intype[i]))
+                                elif str(elem.mtype.intype[i]) != str(param_lst[i]):
+                                    if str(elem.mtype.intype[i]) == "Unknown" or str(param_lst[i]) == "Unknown":
+                                        pass
+                                    else:
+                                        raise TypeMismatchInExpression(ast)
+                    return elem.mtype.restype
         raise Undeclared(Function(), ast.method.name)
 
     # op: str
@@ -502,136 +608,58 @@ class StaticChecker(BaseVisitor):
         op = ast.op
         left = self.visit(ast.left, c)
         right = self.visit(ast.right, c)
-        # elif op in ['+', '-', '*', '/', '%']:
+
+        if str(left) == "TypeCannotBeInferred" or str(right) == "TypeCannotBeInferred":
+            raise TypeCannotBeInferred(ast)
+        elemtyp = None
+        rettyp = None
         if op in ['+', '-', '*', '/', '%']:
-            if isinstance(left, NoneType):
-                if isinstance(ast.left, CallExpr): # if CallExp: need .method
-                    setType(ast.left.method, c, NumberType)
-                elif isinstance(ast.left, ArrayAccess): # if ArrayAccess: need .arr
-                    setTypeArrAccess(ast.left.arr, c, NumberType)
-                else:
-                    setType(ast.left, c, NumberType)
-                left = NumberType()
-            if isinstance(right, NoneType):
-                if isinstance(ast.right, CallExpr): # if CallExp: need .method
-                    setType(ast.right.method, c, NumberType)
-                elif isinstance(ast.right, ArrayAccess): # if ArrayAccess: need .arr
-                    setTypeArrAccess(ast.right.arr, c, NumberType)
-                else:
-                    setType(ast.right, c, NumberType)
-                right = NumberType()
-            if not isinstance(right, NumberType) or not isinstance(left, NumberType):
-                if str(right) == "Unknown" or str(left) == "Unknown":
-                    pass
-                else:
-                    raise TypeMismatchInExpression(ast)
-            return NumberType()
-        
+            elemtyp = NumberType
+            rettyp = NumberType
         elif op in ['==', '!=', '<', '>', '<=', '>=']:
-            if isinstance(left, NoneType):
-                if isinstance(ast.left, CallExpr): # if CallExp: need .method
-                    setType(ast.left.method, c, NumberType)
-                elif isinstance(ast.left, ArrayAccess): # if ArrayAccess: need .arr
-                    setTypeArrAccess(ast.left.arr, c, NumberType)
-                else:
-                    setType(ast.left, c, NumberType)
-                left = NumberType()
-            if isinstance(right, NoneType):
-                if isinstance(ast.right, CallExpr): # if CallExp: need .method
-                    setType(ast.right.method, c, NumberType)
-                elif isinstance(ast.right, ArrayAccess): # if ArrayAccess: need .arr
-                    setTypeArrAccess(ast.right.arr, c, NumberType)
-                else:
-                    setType(ast.right, c, NumberType)
-                right = NumberType()
-            if not isinstance(right, NumberType) or not isinstance(left, NumberType):
-                if str(right) == "Unknown" or str(left) == "Unknown":
-                    pass
-                else:
-                    raise TypeMismatchInExpression(ast)
-            return BoolType()
-
+            elemtyp = NumberType
+            rettyp = BoolType
         elif op in ['==.']:
-            if isinstance(left, NoneType):
-                if isinstance(ast.left, CallExpr): # if CallExp: need .method
-                    setType(ast.left.method, c, StringType)
-                elif isinstance(ast.left, ArrayAccess): # if ArrayAccess: need .arr
-                    setTypeArrAccess(ast.left.arr, c, StringType)
-                else:
-                    setType(ast.left, c, StringType)
-                left = StringType()
-            if isinstance(right, NoneType):
-                if isinstance(ast.right, CallExpr): # if CallExp: need .method
-                    setType(ast.right.method, c, StringType)
-                elif isinstance(ast.right, ArrayAccess): # if ArrayAccess: need .arr
-                    setTypeArrAccess(ast.right.arr, c, StringType)
-                else:
-                    setType(ast.right, c, StringType)
-                right = StringType()
-            if not isinstance(right, StringType) or not isinstance(left, StringType):
-                if str(right) == "Unknown" or str(left) == "Unknown":
-                    pass
-                else:
-                    raise TypeMismatchInExpression(ast)
-            return BoolType()
-
+            elemtyp = StringType
+            rettyp = BoolType
         elif op in ['&&', '||']:
-            if isinstance(left, NoneType):
-                if isinstance(ast.left, CallExpr): # if CallExp: need .method
-                    setType(ast.left.method, c, BoolType)
-                elif isinstance(ast.left, ArrayAccess): # if ArrayAccess: need .arr
-                    setTypeArrAccess(ast.left.arr, c, BoolType)
-                else:
-                    setType(ast.left, c, BoolType)
-                left = BoolType()
-            if isinstance(right, NoneType):
-                if isinstance(ast.right, CallExpr): # if CallExp: need .method
-                    setType(ast.right.method, c, BoolType)
-                elif isinstance(ast.right, ArrayAccess): # if ArrayAccess: need .arr
-                    setTypeArrAccess(ast.right.arr, c, BoolType)
-                else:
-                    setType(ast.right, c, BoolType)
-                right = BoolType()
-            if str(right) != "BooleanType" or str(left) != "BooleanType":
-                if str(right) == "Unknown" or str(left) == "Unknown":
-                    pass
-                else:
-                    raise TypeMismatchInExpression(ast)
-            return BoolType()
-
+            elemtyp = BoolType
+            rettyp = BoolType
         elif op in [ '+.']:
-
-            if isinstance(left, NoneType):
-                if isinstance(ast.left, CallExpr): # if CallExp: need .method
-                    setType(ast.left.method, c, StringType)
-                elif isinstance(ast.left, ArrayAccess): # if ArrayAccess: need .arr
-                    setTypeArrAccess(ast.left.arr, c, StringType)
-                else:
-                    setType(ast.left, c, StringType)
-                left = StringType()
-            if isinstance(right, NoneType):
-                if isinstance(ast.right, CallExpr): # if CallExp: need .method
-                    setType(ast.right.method, c, StringType)
-                elif isinstance(ast.right, ArrayAccess): # if ArrayAccess: need .arr
-                    setTypeArrAccess(ast.right.arr, c, StringType)
-                else:
-                    setType(ast.right, c, StringType)
-                right = StringType()
-            if str(right) != "StringType" or str(left) != "StringType":
-                if str(right) == "Unknown" or str(left) == "Unknown":
-                    pass
-                else:
-                    raise TypeMismatchInExpression(ast)
-            return StringType()
+            elemtyp = StringType
+            rettyp = StringType
+        if str(left) == "NoneType":
+            if isinstance(ast.left, CallExpr): # if CallExp: need .method
+                setType(ast.left.method, c, elemtyp)
+            elif isinstance(ast.left, ArrayAccess): # if ArrayAccess: need .arr
+                setTypeArrAccess(ast.left.arr, c, elemtyp)
+            else:
+                setType(ast.left, c, elemtyp)
+            left = elemtyp()
+        if str(right) == "NoneType":
+            if isinstance(ast.right, CallExpr): # if CallExp: need .method
+                setType(ast.right.method, c, elemtyp)
+            elif isinstance(ast.right, ArrayAccess): # if ArrayAccess: need .arr
+                setTypeArrAccess(ast.right.arr, c, elemtyp)
+            else:
+                setType(ast.right, c, elemtyp)
+            right = elemtyp()
+        if str(right) != str(elemtyp()) or str(left) != str(elemtyp()):
+            if str(right) == "Unknown" or str(left) == "Unknown":
+                pass
+            else:
+                raise TypeMismatchInExpression(ast)
+        return rettyp()
 
     # op: str
     # body: Expr
     def visitUnaryOp(self, ast, c):
         op = ast.op
         expr = self.visit(ast.body, c)
-
+        if str(expr) == "TypeCannotBeInferred":
+            raise TypeCannotBeInferred(ast)
         if op == '!':
-            if isinstance(expr, NoneType):
+            if str(expr) == "NoneType":
                 if isinstance(ast.body, CallExpr): # if CallExp: need .method
                     setType(ast.body.method, c, BoolType)
                 elif isinstance(ast.body, ArrayAccess): # if ArrayAccess: need .arr
@@ -647,16 +675,15 @@ class StaticChecker(BaseVisitor):
                     raise TypeMismatchInExpression(ast)
             return BoolType()
             
-
         if op == '-':
-            if isinstance(expr, NoneType):
+            if str(expr) == "NoneType":
                 if isinstance(ast.body, CallExpr): # if CallExp: need .method
                     setType(ast.body.method, c, NumberType)
                 elif isinstance(ast.body, ArrayAccess): # if ArrayAccess: need .arr
                     setTypeArrAccess(ast.body.arr, c, NumberType)
                 else:
                     setType(ast.body, c, NumberType)
-            elif isinstance(expr, NumberType):
+            elif str(expr)=="NumberType":
                 return NumberType()
             else:
                 if str(expr) == "Unknown":
@@ -667,9 +694,10 @@ class StaticChecker(BaseVisitor):
 
     # name: str
     def visitId(self, ast, c):
-        for i in c:
-            if ast.name == i.name:
-                return i.mtype.restype
+        for elem in c:
+            for i in elem:
+                if ast.name == i.name:
+                    return i.mtype.restype
         raise Undeclared(Identifier(), ast.name)
 
     # For access in Array
@@ -677,11 +705,15 @@ class StaticChecker(BaseVisitor):
     # idx: List[Expr]
     def visitArrayAccess(self, ast, c):
         arr_name = self.visit(ast.arr, c) # return type of Expr
-        idx_lst =[ self.visit(elem, c) for elem in ast.idx] # list index
-        
+        idx_lst =[ self.visit(elem, c) for elem in ast.idx] # list index         
+        if str(arr_name) == "TypeCannotBeInferred":
+            raise TypeCannotBeInferred(ast)
+
         if not isinstance(arr_name, ArrayType):
             raise TypeMismatchInExpression(ast)
         for i in range(len(idx_lst)):
+            if str(idx_lst[i]) == "TypeCannotBeInferred":
+                raise TypeCannotBeInferred(ast)
             if str(idx_lst[i]) == "NoneType":
                 if isinstance(ast.idx[i], Id):
                     setType(ast.idx[i].name, c, NumberType)
@@ -690,28 +722,34 @@ class StaticChecker(BaseVisitor):
                     
             elif str(idx_lst[i]) != "NumberType":
                 raise TypeMismatchInExpression(ast)
-
-
-        len_idx = 0
+        lst = []
         typ = NoneType()
-        for elem in c: # get Type and Size of array
-            if isinstance(ast.arr, Id):
-                if elem.name == ast.arr.name:
-                    typ = elem.mtype.restype.eletype
-                    len_idx = len(elem.mtype.restype.dimen)
-            elif isinstance(ast.arr, CallExpr):
-                if elem.name == ast.arr.method.name:
-                    typ = elem.mtype.restype.eletype
-                    len_idx = len(elem.mtype.restype.dimen)
-            elif isinstance(ast.arr, ArrayAccess): # if ArrayAccess: need .arr
-                if elem.name == ast.arr.arr.name:
-                    typ = elem.mtype.restype.eletype
-                    len_idx = len(elem.mtype.restype.dimen)
-
-        if( len_idx < len(ast.idx)):
+        find = False
+        for i in c:
+            for elem in i: # get Type and Size of array
+                if isinstance(ast.arr, Id):
+                    if elem.name == ast.arr.name:
+                        typ = elem.mtype.restype.eletype
+                        lst = elem.mtype.restype.dimen
+                        find = True
+                elif isinstance(ast.arr, CallExpr):
+                    if elem.name == ast.arr.method.name:
+                        typ = elem.mtype.restype.eletype
+                        lst = elem.mtype.restype.dimen
+                        find = True
+                elif isinstance(ast.arr, ArrayAccess): # if ArrayAccess: need .arr
+                    if elem.name == ast.arr.arr.name:
+                        typ = elem.mtype.restype.eletype
+                        lst = elem.mtype.restype.dimen
+                        find = True
+            if find:
+                break
+        if( len(lst) < len(ast.idx)):
             raise TypeMismatchInExpression(ast)
+        if( len(lst) > len(ast.idx)):
+            temp = len(lst) - len(ast.idx)
+            return ArrayType(lst[temp:], typ)
         return typ
-        # return arr
 
     # For access in JSON
     # json: Expr
@@ -720,10 +758,14 @@ class StaticChecker(BaseVisitor):
         json = self.visit(ast.json, c)
         idx_lst =[ self.visit(elem, c) for elem in ast.idx]
         
-        if not isinstance(json, JSONType):
+        if str(json) == "TypeCannotBeInferred":
+            raise TypeCannotBeInferred(ast)
+        if str(json) != "JSONType":
             raise TypeMismatchInExpression(ast)
         for idx in idx_lst:
-            if not isinstance(idx, StringType):
+            if str(idx) == "TypeCannotBeInferred":
+                raise TypeCannotBeInferred(ast)
+            if str(idx) != "StringType":
                 raise TypeMismatchInExpression(ast)
         return Unknown()
 
@@ -742,11 +784,23 @@ class StaticChecker(BaseVisitor):
     # value: List[Literal]
     def visitArrayLiteral(self, ast, c):
         lst = ast.value
-        for elem in lst:
-            if str(self.visit(elem, c)) !=  str(self.visit(lst[0], c)):
-                raise TypeMismatchInExpression(ast)
-                
-        return ArrayType([x for x in lst], self.visit(lst[0], c))
+        dimen_lst = [len(lst)]
+        elem_typ = self.visit(lst[0],c)
+        temp = 0
+        while isinstance(lst[0], ArrayLiteral):
+            temp +=1
+            dimen_lst+= [len(lst[0].value)]
+            elem_typ = self.visit(lst[0].value[0],c)
+            if isinstance(lst[0].value[0], ArrayLiteral):
+                for i in lst[0].value:
+                    if type(self.visit(i, c)) is not type(self.visit(lst[0].value[0], c)):
+                        raise TypeMismatchInExpression(ast)
+            else:
+                for i in lst[0].value:
+                    if str(self.visit(i, c)) is not str(self.visit(lst[0].value[0], c)):
+                        raise TypeMismatchInExpression(ast)
+            lst = lst[0].value
+        return ArrayType(dimen_lst, elem_typ)
 
     # value: List[tuple]
     def visitJSONLiteral(self, ast, c):

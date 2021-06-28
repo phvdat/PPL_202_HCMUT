@@ -1,0 +1,6 @@
+
+        Function main() {
+            Call(printLn, [Call(read, [4.0])]);
+            Return a;
+        }
+        

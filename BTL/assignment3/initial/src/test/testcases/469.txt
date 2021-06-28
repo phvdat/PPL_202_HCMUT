@@ -1,16 +1,19 @@
 
-        Let x:Number, y:Boolean, z:String,t:JSON;
-        Function foo(x){
-            If(x){
-                Return True;
-            }
-            Return x;
+        Let x, y, z:Number;
+        Constant $x=2;
+        Function foo(a){
         }
-        Function foo1(a[]){
+        Function foo1(a){
         }
         Function main() {
-            Let a,b;
-            a=-x>x;
-            b=z==.a;
+            If(Call(foo,[z])){
+            }
+            Elif(x){
+            }
+            Else{
+                If(Call(foo1,[x])){
+                    a = 10;
+                }
+            }
         }
         

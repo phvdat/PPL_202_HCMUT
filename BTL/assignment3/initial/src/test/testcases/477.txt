@@ -1,0 +1,6 @@
+
+        Let x, y, z:Number;
+        Function main() {
+            Call(print,[z]);
+        }
+        

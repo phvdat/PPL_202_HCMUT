@@ -1,0 +1,12 @@
+
+        Let x;
+        Constant $x=2;
+        Function foo(a){
+        }
+        Function main() {
+            If(x){
+                Let k=$x;
+            }
+            Call(foo, [Call(foo, [k])] );
+        }
+        

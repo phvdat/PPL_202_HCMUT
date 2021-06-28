@@ -1,1 +1,1 @@
-Type Mismatch In Statement: If(Id(x),[Return(BooleanLiteral(true))])
+Type Mismatch In Statement: ForIn(Id(j),CallExpr(Id(foo),[]),[VarDecl(Id(a),NoneType,Id(x)),VarDecl(Id(j),NoneType)])
