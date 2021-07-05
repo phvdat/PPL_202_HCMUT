@@ -1,0 +1,1 @@
+Program([VarDecl(Id(x),NoneType),FuncDecl(Id(foo)[],[Return(BooleanLiteral(true))]),FuncDecl(Id(main)[],[Assign(Id(x),BinaryOp(&&,BooleanLiteral(true),CallExpr(Id(foo),[])))])])
