@@ -1,75 +1,30 @@
-class Program: #decl:List[VarDecl],stmts:List[Stmt]
-    pass
-class VarDecl: #name:str
-    pass
-class Stmt(ABC): #abstract class
-    pass
-class Block(Stmt): #decl:List[VarDecl],stmts:List[Stmt]
-    pass
-class Assign(Stmt): #lhs:Id,rhs:Exp
-    pass
-class Exp(ABC): #abstract class
-    pass
-class BinOp(Exp): #op:str,e1:Exp,e2:Exp #op is +,-,*,/,+.,-.,*.,/., &&,||, >, >., >b, =, =., =b
-    pass
-class UnOp(Exp): #op:str,e:Exp #op is -,-., !,i2f, floor
-    pass
-class IntLit(Exp): #val:int
-    pass
-class FloatLit(Exp): #val:float
-    pass
-class BoolLit(Exp): #val:bool
-    pass
-class Id(Exp): #name:str
-    pass
-
-
 def setType(id, o, typ):
-    for i in o:
-        if id.name == i[0]:
-            i[1]= typ
-
+    for x in o:
+        if id.name == x[0]:
+            x[1] = typ
+            return
 class StaticCheck(Visitor):
-
-    #decl:List[VarDecl],stmts:List[Stmt]
-    def visitProgram(self, ctx: Program, o):
+    def visitProgram(self,ctx:Program,o):
         o=[]
-        for elem in ctx.decl:
-            o += [self.visit(elem,o)]
-        for elem in ctx.stmts: # ctx.stmts trả về một mảng các statement
-            self.visit(elem, o)
-    
-    #name:str
-    def visitVarDecl(self, ctx: VarDecl, o):
-        for i in o:
-            if i[0] == ctx.name:
+        for decl in ctx.decl:
+            o+=[self.visit(decl, o)]
+        for stmt in ctx.stmts:
+            self.visit(stmt, o)
+
+    def visitVarDecl(self,ctx:VarDecl,o):
+        n = ctx.name
+        for x in o:
+            if n == x[0]:
                 raise Redeclared(ctx)
-        return [ctx.name, 'none']
+        return [n, 'none']
 
-
-    #decl:List[VarDecl],stmts:List[Stmt]
     def visitBlock(self,ctx:Block,o):
         env = []
         for decl in ctx.decl:
-            env +=[self.visit(decl,env)]
-
-        temp = [i[0] for i in env] # mảng các tên biến trong env
-        for j in o:
-            if j[0] in temp: # nếu có khai báo trùng => bỏ qua
-                pass
-            else:  
-                env.append(j) # lấy all trong o(k trùng) thêm vào env
+            env+=[self.visit(decl, env)]
         for stmt in ctx.stmts:
-            self.visit(stmt, env)
-
-        temp=[i.name for i in ctx.decl]    # mảng các tên biến trong block
-        for x in o:
-            if x[0] not in temp:# tim biến  thuộc o k dc khai báo trong block
-                for y in env:
-                    if x[0]==y[0]:# mà dc sử dụng trong block
-                        o.remove(x)
-                        o.append(y)
-
+            self.visit(stmt, env+o)
+        
 
     #lhs:Id,rhs:Exp
     def visitAssign(self, ctx: Assign, o):
@@ -189,8 +144,8 @@ class StaticCheck(Visitor):
     def visitBoolLit(self, ctx, o):
         return 'bool'
 
-    def visitId(self, ctx, o):
-        for i in o:
-            if ctx.name == i[0]:
-                return i[1]
+    def visitId(self,ctx,o):
+        for x in o:
+            if ctx.name == x[0]:
+                return x[1]
         raise UndeclaredIdentifier(ctx.name)
